@@ -128,7 +128,7 @@ def main():
         tweetJson = copy.copy(template)
         tweetJson['app'] = 'twitter'
         tweetJson['user']['id'] = tweetId
-        tweetJson['coordinates']['coordaintes'] = [geos[1], geos[0]]
+        tweetJson['coordinates']['coordinates'] = [geos[1], geos[0]]
         tweetJson['created_at'] = dtg.strftime('%a %b %d %H:%M:%S +0000 %Y')
         tweetJson['text'] = text
         

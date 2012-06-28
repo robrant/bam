@@ -121,7 +121,7 @@ class keywordListener(stomp.ConnectionListener):
         ''' Process tweets coming off JMS into keywords'''
         
         # For processing tweets
-        if self.source == 'vast':
+        if self.source == 'twitter':
             record = eventRecord('twitter', eventIn)
         
         elif self.source == 'flickr':
@@ -135,6 +135,9 @@ class keywordListener(stomp.ConnectionListener):
         
         elif self.source == 'foursquares':
             record = eventRecord('foursquares', eventIn)
+        else:
+            print 'No recognised source of data.'
+            sys.exit()
         
         # Goes from single tweet --> n-keywords
         kywd = processEvent(record, self.source, self.mgrsPrecision)

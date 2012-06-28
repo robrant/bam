@@ -41,7 +41,7 @@ class validation(object):
         
     #------------------------------------------------------------------------------------------------
 
-    def validateGeos(self, lat, lon):
+    def validateGeos(self, lon, lat):
         ''' Simple checks for correct lat and lon range. Can I use 'assert' in here?
              Tests written.'''
         
@@ -68,7 +68,7 @@ class validation(object):
             print "Invalid lon range: %s" %(lon)
             return None, None
         
-        return lat, lon
+        return lon, lat
  
  
 ################################################################################################
@@ -172,7 +172,8 @@ class eventRecord(validation):
 
         self.source         = source
         self.timeStamp      = self.checkTimeStamp(record)
-        self.lat, self.lon  = self.validateGeos(self.getGeos(record))
+        lon, lat            = self.getGeos(record)
+        self.lon, self.lat  = self.validateGeos(lon, lat)
         self.text           = self.validateText(record['text'])
         self.hashTags       = self.checkHashtags(record)
         self.eventId        = self.checkRecordId(record)
@@ -211,7 +212,7 @@ class eventRecord(validation):
 
         # Format for tweets: Sat May 26 21:23:41 +0000 2012
         try:
-            ts = datetime.datetime.strptime('%a %b %d %H:%M:%S +0000 %Y')
+            ts = datetime.datetime.strptime(ts, '%a %b %d %H:%M:%S +0000 %Y')
         except ValueError, e:
             print 'Failed to parse the record timestamp.'
             print e
@@ -239,7 +240,7 @@ class eventRecord(validation):
 
     #-------------------------------------------------------------------------------------------------
 
-    def checkId(self, record):
+    def checkRecordId(self, record):
         ''' Check for the ID of the tweet.'''
 
         if record.has_key('id'):
@@ -325,7 +326,7 @@ class eventRecordVast(validation):
             finding hashtags - primarily for twitter. Others could be added for standard types.'''
 
         self.timeStamp     = self.validateTime(timeStamp)
-        self.lat, self.lon = self.validateGeos(lat, lon)
+        self.lat, self.lon = self.validateGeos(lon, lat)
         self.text          = self.validateText(text)
         self.hashTags      = self.findHashTagsAdvanced(text)
         self.eventId       = eventId
@@ -387,7 +388,7 @@ class keyword(validation):
         self.timeStamp = self.validateTime(timeStamp)
 
         # Handle and validate the Geos
-        self.lat, self.lon = self.validateGeos(lat,lon)        
+        self.lon, self.lat  = self.validateGeos(lon,lat)        
         if lat and lon:
             m = mgrsLib.MGRS()
             self.mgrs  = m.toMGRS(self.lat, self.lon, MGRSPrecision=mgrsPrecision/2)
