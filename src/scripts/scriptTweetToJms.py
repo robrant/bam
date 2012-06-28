@@ -17,6 +17,7 @@ import datetime
 import os
 import time
 import json
+import copy
 
 # Custom libs
 import jmsCode                      # JMS STOMP connection wrapper - needs stomp.py
@@ -81,14 +82,18 @@ def main():
     # File Path Info
     path = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/data/"
     fName= "MicroblogsOrdered.csv"
-
+    # Read in a twitter template
+    templateName = 'recordTemplate.json'
+    templateFile = open(os.path.join(path, templateName))
+    template = json.loads(templateFile.read())
+    
     # Make the JMS connection via STOMP and the jmsCode class    
     jms = jmsCode.jmsHandler(hostIn, portIn, verbose=True)
     jms.connect()
 
     f = retrieveFile(path, fName)
     x = 0
-        
+    
     # Loop the lines build tweet objects
     for line in f.readlines():
         
@@ -119,13 +124,17 @@ def main():
         # Get the datetime group into seconds since UNIX time
         dtg = getTime(tweetId, dt)
         if not dtg: continue
-                
-        tweetJson = {'eventId':     tweetId,
-                     'lat':         geos[0],
-                     'lon':         geos[1],
-                     'timeStamp':   dtg.strftime('%Y-%m-%dT%H:%M:%S'),
-                     'text':        text
-                     }
+        
+        tweetJson = copy.copy(template)
+        tweetJson['app'] = 'twitter'
+        tweetJson['user']['id'] = tweetId
+        tweetJson['coordinates']['coordaintes'] = [geos[1], geos[0]]
+        tweetJson['created_at'] = dtg.strftime('%a %b %d %H:%M:%S +0000 %Y')
+        tweetJson['text'] = text
+        
+        #==============================================================================
+        # Could put in here something to add in a platform (mobile vs static, etc)
+        #==============================================================================
         
         try:
             tweetJson = json.dumps(tweetJson)

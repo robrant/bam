@@ -167,6 +167,153 @@ class processEvent():
 class eventRecord(validation):
     
     
+    def __init__(self, source, record):
+        '''Constructor only'''
+
+        self.source         = source
+        self.timeStamp      = self.checkTimeStamp(record)
+        self.lat, self.lon  = self.validateGeos(self.getGeos(record))
+        self.text           = self.validateText(record['text'])
+        self.hashTags       = self.checkHashtags(record)
+        self.eventId        = self.checkRecordId(record)
+        self.userId         = self.checkUserId(record)
+        self.platform       = self.sourcePlatform(record)
+         
+    #-------------------------------------------------------------------------------------------------
+
+    def sourcePlatform(self, record):
+        ''' Attempts to find the platform type from which the record was raised.
+            Was it for example a mobile tweet?'''
+        
+        if record.has_key('source'):
+            platform = record['source']
+            st = platform.find('>')
+            sp = platform.find('<', st)
+            
+            # For platform/source held in a url <a> tag
+            if st > -1 and sp > -1:
+                platform = platform[st+1:sp]
+        else:
+            platform = None
+            
+        return platform
+        
+    #-------------------------------------------------------------------------------------------------
+
+    def checkTimeStamp(self, record):
+        ''' Check for the timestamp field in the record.'''
+
+        try:
+            ts = record['created_at']
+        except KeyError, e:
+            print e
+            ts = None
+
+        # Format for tweets: Sat May 26 21:23:41 +0000 2012
+        try:
+            ts = datetime.datetime.strptime('%a %b %d %H:%M:%S +0000 %Y')
+        except ValueError, e:
+            print 'Failed to parse the record timestamp.'
+            print e
+            ts = None
+            
+        return ts
+    #-------------------------------------------------------------------------------------------------
+
+    def checkUserId(self, record):
+        ''' Check for the ID of the user.'''
+
+        if record.has_key('user'):
+
+            if record['user'].has_key('id'):
+                userId = record['id']
+    
+            else:
+                print 'could not find a tweet ID field'
+                userId = None
+        else:
+                print 'could not find a User ID field.'
+                userId = None
+        
+        return userId
+
+    #-------------------------------------------------------------------------------------------------
+
+    def checkId(self, record):
+        ''' Check for the ID of the tweet.'''
+
+        if record.has_key('id'):
+            recordId = record['id']
+
+        else:
+            print 'could not find an ID field'
+            recordId = None
+        
+        return recordId
+
+    #-------------------------------------------------------------------------------------------------
+
+    def checkHashtags(self, record):
+        ''' Check for hashtags in the input.'''
+
+        hts = []
+        
+        # Check the input record has a hashtags key and it has some content
+        if record.has_key('hashtags') and len(record['hashtags']) > 0:
+            for ht in record['hashtags']:
+                hts.append(ht['text'])
+        # Else do a regex search for hashtags - more relevant for inputs that haven't already broken them out.
+        else:
+            hts = self.findHashTagsAdvanced(record['text'])
+        
+        return hts
+        
+    #-------------------------------------------------------------------------------------------------
+
+    def getGeos(self, record):
+        ''' Extract the lat and lon'''
+
+        if record.has_key('coordinates') == True:
+            if record['coordinates']['type']:
+                lon, lat = record['coordinates']['coordinates']
+            else:
+                print 'not point type geo.'
+        else:
+            lon, lat = None, None
+            
+        return lon, lat
+
+#------------------------------------------------------------------------------------------ 
+
+    def findHashTagsAdvanced(self, text, user=None):
+        ''' Function to extract hashtags from a string of text.
+            This will not pick out those with punctuation - '_', '-', etc.
+            From: http://stackoverflow.com/questions/2527892/parsing-a-tweet-to-extract-hashtags-into-an-array-in-python
+            Tests written.'''
+        
+        if user: tag = '@'
+        else:    tag = '#'
+        
+        # This regex returns a triple for each match: (space, #, hashtag).
+        UTF_CHARS = ur'a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff'
+        TAG_EXP = ur'(^|[^0-9A-Z&/]+)(%s|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)' %(tag, UTF_CHARS)
+        x = re.compile(TAG_EXP, re.UNICODE | re.IGNORECASE)        
+        hts = x.findall(text)
+        
+        htsOut = list(ht[-1].lower() for ht in hts)
+        if len(htsOut) > 0:
+            return htsOut
+        else:
+            return None
+
+       
+################################################################################################
+################################################################################################
+
+
+class eventRecordVast(validation):
+    
+    
     def __init__(self):
         '''Constructor only'''
 
@@ -206,7 +353,6 @@ class eventRecord(validation):
             return htsOut
         else:
             return None
-        
         
 ################################################################################################
 ################################################################################################

@@ -120,24 +120,24 @@ class keywordListener(stomp.ConnectionListener):
     def processKeyword(self, eventIn):
         ''' Process tweets coming off JMS into keywords'''
         
-        # Build a custom tweet object that stores all hashtags/keywords
-        event = eventRecord()
-        
         # For processing tweets
         if self.source == 'vast':
-            ts = datetime.datetime.strptime(eventIn['timeStamp'], '%Y-%m-%dT%H:%M:%S')
-            event.importData(timeStamp=ts, lat=eventIn['lat'], lon=eventIn['lon'], text=eventIn['text'], eventId=eventIn['eventId'])
+            record = eventRecord('twitter', eventIn)
+        
         elif self.source == 'flickr':
-            pass
+            record = eventRecord('flickr', eventIn)
+        
         elif self.source == 'instagram':
-            pass
+            record = eventRecord('instagram', eventIn)
+        
         elif self.source == 'panoramia':
-            pass
+            record = eventRecord('panoramia', eventIn)
+        
         elif self.source == 'foursquares':
-            pass
+            record = eventRecord('foursquares', eventIn)
         
         # Goes from single tweet --> n-keywords
-        kywd = processEvent(event, self.source, self.mgrsPrecision)
+        kywd = processEvent(record, self.source, self.mgrsPrecision)
         
         # Add keywords to the list based on hashtags
         kywd.fromHashTag()                  # Get keyword from the hashtags
