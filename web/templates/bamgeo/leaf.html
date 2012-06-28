@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+{% load leaflet_tags %}
+
+<head>
+    ...
+    {% leaflet_js %}
+    {% leaflet_css %}
+    
+<style>
+
+    .leaflet-container {
+        width:  1000px;
+        height: 200px;
+    }
+
+    #specialbigmap {
+        height: 800px;
+    }
+    	
+</style>    
+    
+</head>
+
+<body>
+
+    {% leaflet_map "yourmap" %}
+
+
+<script type="text/javascript">
+
+    // Add background layer from MapBox
+    yourmap.addLayer(new L.TileLayer('http://{s}.tile.cloudmade.com/b04077cbdf8c4aa7b32ebffb94fb8004/997/256/{z}/{x}/{y}.png'));
+	
+	var london = new L.LatLng(51.51, -0.09);
+	yourmap.setView(london, 13);
+
+	/*
+	// NEW MARKER IN JAVASCRIPT
+	var markerLocation = new L.LatLng(51.5, -0.09);
+
+	var marker = new L.Marker(markerLocation);
+	yourmap.addLayer(marker);
+
+	// NEW CIRCLE IN JAVASCRIPT
+	var circleLocation = new L.LatLng(51.508, -0.11),
+    circleOptions = {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5
+    };
+    
+	var circle = new L.Circle(circleLocation, 50, circleOptions);
+	yourmap.addLayer(circle);
+
+	// NEW TRIANGLE IN JAVASCRIPT
+	var p1 = new L.LatLng(51.509, -0.08),
+    	p2 = new L.LatLng(51.503, -0.06),
+   		p3 = new L.LatLng(51.51, -0.047),
+    
+    polygonPoints = [p1, p2, p3];
+
+	var polygon = new L.Polygon(polygonPoints);
+	yourmap.addLayer(polygon);
+	*/
+	
+	// GEOJSON
+	var geojsonMarkerOptions = {
+	    radius: 8,
+	    fillColor: "#ff7800",
+	    color: "#000",
+	    weight: 1,
+	    opacity: 1,
+	    fillOpacity: 0.8
+	};
+
+	var geojsonFeature = {
+	    "type": "Feature",
+	    "properties": {
+	        "name": "Coors Field",
+	        "amenity": "Baseball Stadium",
+	        "popupContent": "This is where the Rockies play!"
+	    },
+	    "geometry": {
+	        "type": "Point",
+	        "coordinates": [51.51, -0.09]
+	    }
+	};
+		
+	var geojsonLayer = new L.GeoJSON(geojsonFeature, {
+	    pointToLayer: function (latlng) {
+	        return new L.CircleMarker(geojsonFeature, geojsonMarkerOptions);
+	    }
+	});
+
+	yourmap.addLayer(geojsonLayer);
+	geojsonLayer.addGeoJSON(geojsonFeature);
+
+
+	// b04077cbdf8c4aa7b32ebffb94fb8004
+	
+</script>
+
+</body>
+
+
+</html>
+

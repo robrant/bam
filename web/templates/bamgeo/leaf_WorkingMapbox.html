@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+{% load leaflet_tags %}
+
+<head>
+    ...
+    {% leaflet_js %}
+    {% leaflet_css %}
+    
+<style>
+
+    .leaflet-container {
+        width:  1000px;
+        height: 200px;
+    }
+
+    #specialbigmap {
+        height: 800px;
+    }
+    	
+</style>    
+    
+</head>
+
+<body>
+
+    {% leaflet_map "yourmap" %}
+
+
+<script type="text/javascript">
+
+    // Add background layer from MapBox
+    yourmap.addLayer(new L.TileLayer('http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-light/{z}/{x}/{y}.png'));
+	
+	var london = new L.LatLng(51.51, -0.09);
+	yourmap.setView(london, 13);
+
+	// b04077cbdf8c4aa7b32ebffb94fb8004
+	
+</script>
+
+</body>
+
+
+</html>
+

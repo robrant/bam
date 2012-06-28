@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+        <Document>
+            <name>KmlFile</name>
+                <Style id="2">
+                    <LineStyle>
+                        <width>4</width>
+                    </LineStyle>
+                    <PolyStyle>
+                        <color>4d0000ff</color>
+                    </PolyStyle>
+                </Style>
+                <Style id="4">
+                    <LineStyle>
+                        <width>4</width>
+                    </LineStyle>
+                    <PolyStyle>
+                        <color>4dff0000</color>
+                    </PolyStyle>
+                </Style>
+                <Style id="6">
+                    <LineStyle>
+                        <width>4</width>
+                    </LineStyle>
+                    <PolyStyle>
+                        <color>4dffff00</color>
+                    </PolyStyle>
+                </Style>
+                <Style id="8">
+                    <LineStyle>
+                        <width>4</width>
+                    </LineStyle>
+                    <PolyStyle>
+                        <color>4d00ffff</color>
+                    </PolyStyle>
+                </Style>
+                <Style id="10">
+                    <LineStyle>
+                        <width>4</width>
+                    </LineStyle>
+                    <PolyStyle>
+                        <color>4dffffff</color>
+                    </PolyStyle>
+                </Style><Placemark> <name>Grid: 38SMB4415988032</name> <styleUrl>10</styleUrl>
+                    <gx:balloonVisibility>1</gx:balloonVisibility>
+                    <Polygon>
+                        <tessellate>1</tessellate>
+                        <outerBoundaryIs>
+                            <LinearRing>
+                                <coordinates>
+                                    44.3999927631,33.3299963587,0 44.3999927631,33.330005375,0 44.4000035038,33.330005375,0 44.4000035038,33.3299963587,0 
+                                </coordinates>
+                            </LinearRing>
+                        </outerBoundaryIs>
+                    </Polygon>
+                </Placemark>
+            <Placemark> <name>Grid: 38SMB44158803</name> <styleUrl>8</styleUrl>
+                    <gx:balloonVisibility>1</gx:balloonVisibility>
+                    <Polygon>
+                        <tessellate>1</tessellate>
+                        <outerBoundaryIs>
+                            <LinearRing>
+                                <coordinates>
+                                    44.3998961871,33.3299778528,0 44.3998961871,33.3300680157,0 44.4000035941,33.3300680157,0 44.4000035941,33.3299778528,0 
+                                </coordinates>
+                            </LinearRing>
+                        </outerBoundaryIs>
+                    </Polygon>
+                </Placemark>
+            <Placemark> <name>Grid: 38SMB441880</name> <styleUrl>6</styleUrl>
+                    <gx:balloonVisibility>1</gx:balloonVisibility>
+                    <Polygon>
+                        <tessellate>1</tessellate>
+                        <outerBoundaryIs>
+                            <LinearRing>
+                                <coordinates>
+                                    44.3993608235,33.3297046742,0 44.3993608235,33.3306063035,0 44.4004348906,33.3306063035,0 44.4004348906,33.3297046742,0 
+                                </coordinates>
+                            </LinearRing>
+                        </outerBoundaryIs>
+                    </Polygon>
+                </Placemark>
+            <Placemark> <name>Grid: 38SMB4488</name> <styleUrl>4</styleUrl>
+                    <gx:balloonVisibility>1</gx:balloonVisibility>
+                    <Polygon>
+                        <tessellate>1</tessellate>
+                        <outerBoundaryIs>
+                            <LinearRing>
+                                <coordinates>
+                                    44.3982863863,33.3296994741,0 44.3982863863,33.3387157678,0 44.4090270569,33.3387157678,0 44.4090270569,33.3296994741,0 
+                                </coordinates>
+                            </LinearRing>
+                        </outerBoundaryIs>
+                    </Polygon>
+                </Placemark>
+            <Placemark> <name>Grid: 38SMB48</name> <styleUrl>2</styleUrl>
+                    <gx:balloonVisibility>1</gx:balloonVisibility>
+                    <Polygon>
+                        <tessellate>1</tessellate>
+                        <outerBoundaryIs>
+                            <LinearRing>
+                                <coordinates>
+                                    44.3558396128,33.25732881,0 44.3558396128,33.3474927988,0 44.4631576788,33.3474927988,0 44.4631576788,33.25732881,0 
+                                </coordinates>
+                            </LinearRing>
+                        </outerBoundaryIs>
+                    </Polygon>
+                </Placemark>
+            </Document> </kml>

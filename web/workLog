@@ -1,0 +1,24 @@
+All the django installation media is being stored in /Applications/xxPythonLibs
+
+1. Installed Django-1.4 as per the documentation online (from within the Django directory).
+   sudo python setup.py install 
+
+2. Then installed django-leaflet-0.0.2 using pip. Inside the directory:
+   pip install django-leaflet
+   http://pypi.python.org/pypi/django-leaflet
+   
+
+3. Then installed django-mongo engine using pip (having downloaded the following directories: 
+   wkornewald-django-nonrel-be48c152abc6
+   wkornewald-djangotoolbox-a8cdf61ba9c0
+   
+   In doing so, I think this uninstalled django and then reinstalled it, so the leaflet stuff may have gone.
+   
+4. So tried re-installing leaflet-django to get that working. Was already installed and hopefully works.
+   
+5. All of this basically failed - specifically when trying to specify to use a mongo database in the
+   django setting.py. So having done some reading (and lots of people saying just use pymongo) I'm doing to direct
+   route. however, in setting it up, you need to have a database, so I used the sqlLite option, but won't use it.
+   
+
+   

@@ -1,0 +1,90 @@
+#////////////////////////////////////////////////////////////////////////////////////////////////////
+# MONGO DEVELOPMENT
+#////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+## Get info on the application.service
+## In this case, its providing information on the mongo service (called 'data' in the yml file).
+
+$ dotcloud info mongodevapp.data
+config:
+    mongodb_noprealloc: true
+    mongodb_nopreallocj: true
+    mongodb_oplog_size: 256
+    mongodb_password: 5CP6c0pfsyOApPf5niHq
+    mongodb_replset: mongodevapp.data
+    mongodb_smallfiles: true
+created_at: 1340306155.802685
+datacenter: Amazon-us-east-1c
+image_version: c60aa2f91b10 (latest)
+instance: data.0
+instances:
+    mongodevapp.data.0:
+        state: PRIMARY
+memory:
+-   total reserved: None
+-   total used: 23MB
+-   cache portion: 6MB of 23MB (29%)
+ports:
+-   name: ssh
+    url: ssh://mongodb@mongodevapp-redSquirrel-data-0.dotcloud.com:18776
+-   name: mongodb
+    url: mongodb://root:5CP6c0pfsyOApPf5niHq@mongodevapp-redSquirrel-data-0.dotcloud.com:30413
+pricing: free
+state: running
+type: mongodb
+
+#======================================================================================================
+
+## This gets me an interactive mongo shell from which you can do all your mongo auth and setup. 
+$ dotcloud run mongodevapp.data mongo
+
+
+## Authenticate using the information from the 'dotcloud info' command above
+PRIMARY> use tfl
+PRIMARY> db.auth("root", "5CP6c0pfsyOApPf5niHq")
+PRIMARY> db.addUser("asbo", "asbo")
+{
+	"n" : 0,
+	"lastOp" : NumberLong("5756576243428360193"),
+	"connectionId" : 15,
+	"err" : null,
+	"ok" : 1
+}
+{
+	"user" : "asbo",
+	"readOnly" : false,
+	"pwd" : "3242254258460622aefd192c409c3554",
+	"_id" : ObjectId("4fe37798fd8cc7da17a2c75a")
+}
+
+## Adding a readonly user:
+
+PRIMARY> db.addUser("asboRead", "asboRead", true)
+{
+	"updatedExisting" : true,
+	"n" : 1,
+	"lastOp" : NumberLong("5756582153303359489"),
+	"connectionId" : 15,
+	"err" : null,
+	"ok" : 1
+}
+{
+	"_id" : ObjectId("4fe37cf2fd8cc7da17a2c75b"),
+	"user" : "asboRead",
+	"readOnly" : true,
+	"pwd" : "e6e12eaac319da82ba8a6da14717e4d0"
+}
+
+#================================================================================
+
+## Other Useful Functions 
+##  There is lots in the docs about replication: http://docs.dotcloud.com/services/mongodb/
+## A full tutorial on using mongo with django too: http://docs.dotcloud.com/tutorials/python/django-mongodb/
+
+# This gets the db status
+$ dotcloud status mongodevapp.data
+
+# This gets the mongo logs printed to screen
+$ dotcloud logs mongodevapp.data
+

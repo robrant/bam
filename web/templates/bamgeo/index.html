@@ -1,0 +1,9 @@
+{% if docList %}
+    <ul>
+    {% for docId in docList %}
+        <li>{{docId}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}

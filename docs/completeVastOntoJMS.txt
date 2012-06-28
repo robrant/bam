@@ -1,0 +1,344 @@
+Connection successful
+Processed:  20000
+20,000 taken: 0:03:47.840543
+Processed:  40000
+20,000 taken: 0:09:40.322016
+Processed:  60000
+20,000 taken: 0:12:29.106820
+Processed:  80000
+20,000 taken: 0:08:53.625355
+Processed:  100000
+20,000 taken: 0:07:40.474660
+Processed:  120000
+20,000 taken: 0:08:16.685519
+Processed:  140000
+20,000 taken: 0:08:09.303574
+Processed:  160000
+20,000 taken: 0:08:04.614651
+Processed:  180000
+20,000 taken: 0:07:47.778802
+Processed:  200000
+20,000 taken: 0:07:39.864469
+Processed:  220000
+20,000 taken: 0:07:28.821956
+Processed:  240000
+20,000 taken: 0:07:42.741343
+Processed:  260000
+20,000 taken: 0:07:42.262841
+Processed:  280000
+20,000 taken: 0:07:48.553142
+Processed:  300000
+20,000 taken: 0:07:22.711138
+Processed:  320000
+20,000 taken: 0:07:33.280726
+Processed:  340000
+20,000 taken: 0:07:32.260126
+Processed:  360000
+20,000 taken: 0:07:37.998393
+Processed:  380000
+20,000 taken: 0:07:28.764759
+Processed:  400000
+20,000 taken: 0:07:34.169245
+Processed:  420000
+20,000 taken: 0:07:36.815733
+Processed:  440000
+20,000 taken: 0:07:34.775956
+Processed:  460000
+20,000 taken: 0:07:52.283012
+Processed:  480000
+20,000 taken: 0:07:56.524259
+Processed:  500000
+20,000 taken: 0:07:56.897759
+Processed:  520000
+20,000 taken: 0:07:58.620155
+Processed:  540000
+20,000 taken: 0:07:55.658191
+Processed:  560000
+20,000 taken: 0:07:55.307273
+Processed:  580000
+20,000 taken: 0:07:53.844920
+Processed:  600000
+20,000 taken: 0:07:54.808357
+Processed:  620000
+20,000 taken: 0:07:55.589017
+Processed:  640000
+20,000 taken: 0:07:55.952105
+Processed:  660000
+20,000 taken: 0:07:57.147083
+Processed:  680000
+20,000 taken: 0:09:19.732991
+Processed:  700000
+20,000 taken: 0:13:57.839834
+Processed:  720000
+20,000 taken: 0:15:12.885221
+Processed:  740000
+20,000 taken: 0:16:13.513874
+Processed:  760000
+20,000 taken: 0:17:17.716510
+Processed:  780000
+20,000 taken: 0:18:13.576346
+Processed:  800000
+20,000 taken: 0:14:14.806794
+Processed:  820000
+20,000 taken: 0:19:30.395580
+Processed:  840000
+20,000 taken: 0:19:39.150055
+Processed:  860000
+20,000 taken: 0:19:25.024720
+Processed:  880000
+20,000 taken: 0:19:22.536456
+Processed:  900000
+20,000 taken: 0:25:31.157773
+Processed:  920000
+20,000 taken: 0:55:58.133222
+Processed:  940000
+20,000 taken: 0:22:20.878248
+Processed:  960000
+20,000 taken: 0:22:31.465723
+Processed:  980000
+20,000 taken: 0:24:30.667373
+Processed:  1000000
+20,000 taken: 0:22:31.666750
+Processed:  1020000
+20,000 taken: 0:28:11.905321
+TimeTaken: 10:51:01.441096
+         195450831 function calls (185216553 primitive calls) in 4426.158 CPU seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+  2046110   36.487    0.000   36.487    0.000 :0(__enter__)
+        1    0.000    0.000    0.000    0.000 :0(__getitem__)
+        1    0.001    0.001    0.001    0.001 :0(__import__)
+        1    0.000    0.000    0.000    0.000 :0(__new__)
+  3069177   27.347    0.000   27.347    0.000 :0(acquire)
+        7    0.000    0.000    0.000    0.000 :0(allocate_lock)
+  8185221   75.507    0.000   75.507    0.000 :0(append)
+  1023057   15.114    0.000   15.114    0.000 :0(charmap_decode)
+  1023057   32.134    0.000   63.808    0.000 :0(charmap_encode)
+        1    0.000    0.000    0.000    0.000 :0(chr)
+        1    0.000    0.000    0.000    0.000 :0(close)
+        4    0.000    0.000    0.000    0.000 :0(compile)
+        1    0.000    0.000    0.000    0.000 :0(connect)
+      708    0.013    0.000    0.014    0.000 :0(decode)
+  1023057   22.647    0.000  103.766    0.000 :0(encode)
+  8187980   85.769    0.000   85.769    0.000 :0(encode_basestring_ascii)
+  1023055   17.542    0.000   17.542    0.000 :0(end)
+        1    0.000    0.000    0.000    0.000 :0(endswith)
+        5    0.000    0.000    0.000    0.000 :0(extend)
+  6138402   71.247    0.000   71.247    0.000 :0(get)
+        4    0.000    0.000    0.000    0.000 :0(get_ident)
+        6    0.000    0.000    0.000    0.000 :0(getattr)
+      116    0.001    0.000    0.001    0.000 :0(getlower)
+        1    0.000    0.000    0.000    0.000 :0(getsockname)
+  1023055   21.200    0.000   21.200    0.000 :0(groupdict)
+        2    0.000    0.000    0.000    0.000 :0(hasattr)
+  1023763   13.930    0.000   13.930    0.000 :0(id)
+       24    0.000    0.000    0.000    0.000 :0(index)
+        1    0.000    0.000    0.000    0.000 :0(insert)
+  2046818   17.074    0.000   17.074    0.000 :0(isinf)
+ 23541793  238.406    0.000  238.406    0.000 :0(isinstance)
+  2046818   17.532    0.000   17.532    0.000 :0(isnan)
+  1023061   11.032    0.000   11.032    0.000 :0(items)
+  1023763   12.568    0.000   12.568    0.000 :0(iteritems)
+  1023055   14.068    0.000   14.068    0.000 :0(iterkeys)
+2046162/2046119   22.695    0.000   22.699    0.000 :0(join)
+  4092226   35.800    0.000   35.800    0.000 :0(keys)
+4093285/4093272   59.965    0.000   59.965    0.000 :0(len)
+  2046159   20.663    0.000   20.663    0.000 :0(lower)
+  2046110   46.931    0.000   46.931    0.000 :0(match)
+       29    0.000    0.000    0.000    0.000 :0(max)
+      125    0.001    0.000    0.001    0.000 :0(min)
+        1    0.001    0.001    0.001    0.001 :0(open)
+       81    0.001    0.000    0.001    0.000 :0(ord)
+       74    0.001    0.000    0.001    0.000 :0(range)
+        1    1.020    1.020    1.020    1.020 :0(readlines)
+  2046118   16.600    0.000   16.600    0.000 :0(release)
+       12    0.000    0.000    0.000    0.000 :0(remove)
+  4092289   40.612    0.000   40.612    0.000 :0(replace)
+  2046818   36.130    0.000   36.130    0.000 :0(repr)
+  3069168   34.784    0.000   34.784    0.000 :0(rstrip)
+  1023057   43.734    0.000   43.734    0.000 :0(sendall)
+       12    0.000    0.000    0.000    0.000 :0(setattr)
+  2046112   17.741    0.000   17.741    0.000 :0(setlocale)
+        1    0.016    0.016    0.016    0.016 :0(setprofile)
+        1    0.000    0.000    0.000    0.000 :0(settimeout)
+        1    0.000    0.000    0.000    0.000 :0(shutdown)
+        1    0.000    0.000    0.000    0.000 :0(sort)
+        6    0.000    0.000    0.000    0.000 :0(sorted)
+  2046111   23.639    0.000   23.639    0.000 :0(split)
+        1    0.000    0.000    0.000    0.000 :0(start_new_thread)
+        1    0.000    0.000    0.000    0.000 :0(startswith)
+  1023101   43.166    0.000   43.166    0.000 :0(strftime)
+  2046110   67.224    0.000 1054.067    0.001 :0(strptime)
+       10    0.000    0.000    0.002    0.000 :0(sub)
+  2046111   27.244    0.000   27.244    0.000 :0(toordinal)
+        1    0.000    0.000    0.000    0.000 :0(translate)
+        1    0.000    0.000    0.000    0.000 :0(tzset)
+      105    0.002    0.000    0.002    0.000 :0(utcnow)
+  1023055    9.570    0.000    9.570    0.000 :0(values)
+  1023055   13.448    0.000   13.448    0.000 :0(weekday)
+        1    0.001    0.001 4426.142 4426.142 <string>:1(<module>)
+        1    0.000    0.000    0.000    0.000 <string>:1(connect)
+        1    0.000    0.000    0.000    0.000 <string>:1(getsockname)
+  1023057   19.151    0.000   62.886    0.000 <string>:1(sendall)
+        1    0.000    0.000    0.000    0.000 <string>:1(settimeout)
+        1    0.000    0.000    0.000    0.000 <string>:1(shutdown)
+  1023058   19.017    0.000   60.975    0.000 __init__.py:1034(debug)
+        1    0.000    0.000    0.000    0.000 __init__.py:1046(info)
+  1023059   22.270    0.000   22.270    0.000 __init__.py:1230(getEffectiveLevel)
+  1023059   19.687    0.000   41.958    0.000 __init__.py:1244(isEnabledFor)
+  1023763   24.668    0.000 2089.128    0.002 __init__.py:184(dumps)
+        1    0.000    0.000    0.000    0.000 __init__.py:49(normalize_encoding)
+        1    0.000    0.000    0.002    0.002 __init__.py:71(search_function)
+        1    0.000    0.000    0.000    0.000 _strptime.py:103(__calc_am_pm)
+        1    0.001    0.001    0.002    0.002 _strptime.py:115(__calc_date_time)
+        1    0.002    0.002    0.023    0.023 _strptime.py:12(<module>)
+        1    0.000    0.000    0.000    0.000 _strptime.py:160(__calc_timezone)
+        1    0.000    0.000    0.000    0.000 _strptime.py:176(TimeRE)
+        1    0.000    0.000    0.020    0.020 _strptime.py:179(__init__)
+        4    0.000    0.000    0.000    0.000 _strptime.py:212(<genexpr>)
+        6    0.000    0.000    0.005    0.001 _strptime.py:221(__seqToRE)
+       49    0.001    0.000    0.004    0.000 _strptime.py:236(<genexpr>)
+        5    0.001    0.000    0.010    0.002 _strptime.py:240(pattern)
+        2    0.000    0.000    0.069    0.035 _strptime.py:263(compile)
+  2046112   35.379    0.000  373.689    0.000 _strptime.py:27(_getlang)
+  2046110  350.527    0.000  986.820    0.000 _strptime.py:295(_strptime)
+        1    0.000    0.000    0.000    0.000 _strptime.py:31(LocaleTime)
+        1    0.000    0.000    0.006    0.006 _strptime.py:50(__init__)
+        1    0.000    0.000    0.001    0.001 _strptime.py:88(__calc_weekday)
+        1    0.001    0.001    0.002    0.002 _strptime.py:96(__calc_month)
+        1    0.000    0.000    0.000    0.000 calendar.py:126(Calendar)
+        1    0.000    0.000    0.000    0.000 calendar.py:132(__init__)
+        1    0.000    0.000    0.000    0.000 calendar.py:138(setfirstweekday)
+        1    0.000    0.000    0.000    0.000 calendar.py:21(IllegalMonthError)
+        1    0.000    0.000    0.000    0.000 calendar.py:255(TextCalendar)
+        1    0.000    0.000    0.000    0.000 calendar.py:28(IllegalWeekdayError)
+        1    0.000    0.000    0.000    0.000 calendar.py:372(HTMLCalendar)
+        1    0.000    0.000    0.000    0.000 calendar.py:47(_localized_month)
+        1    0.000    0.000    0.000    0.000 calendar.py:484(TimeEncoding)
+        1    0.000    0.000    0.000    0.000 calendar.py:496(LocaleTextCalendar)
+        2    0.000    0.000    0.000    0.000 calendar.py:50(<lambda>)
+        2    0.000    0.000    0.000    0.000 calendar.py:52(__init__)
+        1    0.000    0.000    0.000    0.000 calendar.py:531(LocaleHTMLCalendar)
+       26    0.001    0.000    0.001    0.000 calendar.py:55(__getitem__)
+        1    0.001    0.001    0.001    0.001 calendar.py:6(<module>)
+        1    0.000    0.000    0.000    0.000 calendar.py:66(_localized_day)
+        2    0.000    0.000    0.000    0.000 calendar.py:71(__init__)
+       14    0.000    0.000    0.001    0.000 calendar.py:74(__getitem__)
+        1    0.000    0.000    0.000    0.000 codecs.py:77(__new__)
+        2    0.000    0.000    0.000    0.000 connect.py:250(is_localhost)
+        1    0.000    0.000    0.002    0.002 connect.py:264(start)
+        1    0.002    0.002    0.008    0.008 connect.py:276(stop)
+        1    0.000    0.000    0.000    0.000 connect.py:297(is_connected)
+  1023055   51.223    0.000  949.052    0.001 connect.py:356(send)
+        1    0.000    0.000    0.001    0.001 connect.py:409(connect)
+        2    0.000    0.000    0.002    0.001 connect.py:418(disconnect)
+  1023057   37.873    0.000  799.503    0.001 connect.py:461(__send_frame_helper)
+  1023057  204.222    0.000  751.441    0.001 connect.py:492(__send_frame)
+  1023055   22.168    0.000   31.737    0.000 connect.py:529(__notify)
+        1    0.000    0.000    0.001    0.001 connect.py:671(__attempt_connection)
+        1    0.000    0.000    0.001    0.001 connect.py:81(__init__)
+ 22515706  503.830    0.000 1205.360    0.000 encoder.py:213(_iterencode_dict)
+32749796/22515706  785.188    0.000 1772.524    0.000 encoder.py:284(_iterencode)
+  2046818   71.839    0.000  142.575    0.000 encoder.py:31(floatstr)
+  1023763  260.378    0.000 2064.460    0.002 encoder.py:346(encode)
+  1023763   10.359    0.000   10.359    0.000 encoder.py:370(iterencode)
+        1    0.000    0.000    0.008    0.008 jmsCode.py:123(disConnect)
+  1023055   24.890    0.000  973.942    0.001 jmsCode.py:144(sendData)
+        1    0.000    0.000    0.000    0.000 jmsCode.py:74(__init__)
+        1    0.000    0.000    0.004    0.004 jmsCode.py:88(connect)
+        1    0.000    0.000    0.000    0.000 latin_1.py:13(Codec)
+        1    0.000    0.000    0.000    0.000 latin_1.py:20(IncrementalEncoder)
+        1    0.000    0.000    0.000    0.000 latin_1.py:24(IncrementalDecoder)
+        1    0.000    0.000    0.000    0.000 latin_1.py:28(StreamWriter)
+        1    0.000    0.000    0.000    0.000 latin_1.py:31(StreamReader)
+        1    0.000    0.000    0.000    0.000 latin_1.py:34(StreamConverter)
+        1    0.000    0.000    0.000    0.000 latin_1.py:41(getregentry)
+        1    0.000    0.000    0.000    0.000 latin_1.py:8(<module>)
+  2046112  127.213    0.000  225.207    0.000 locale.py:316(normalize)
+  2046112   42.003    0.000  267.210    0.000 locale.py:382(_parse_localename)
+  2046112   53.359    0.000  338.310    0.000 locale.py:481(getlocale)
+  1023057   17.311    0.000   81.119    0.000 mac_roman.py:11(encode)
+  1023057   16.560    0.000   31.674    0.000 mac_roman.py:14(decode)
+        1    0.000    0.000    0.000    0.000 posixpath.py:59(join)
+        1    0.000    0.000 4426.158 4426.158 profile:0(main())
+        0    0.000             0.000          profile:0(profiler)
+       12    0.000    0.000    0.076    0.006 re.py:188(compile)
+       43    0.002    0.000    0.003    0.000 re.py:206(escape)
+       12    0.000    0.000    0.076    0.006 re.py:229(_compile)
+       10    0.000    0.000    0.001    0.000 re.py:251(_compile_repl)
+       10    0.000    0.000    0.001    0.000 re.py:271(_subx)
+        1    0.000    0.000    0.001    0.001 scriptTweetToJms.py:25(retrieveFile)
+  1023055   35.093    0.000   54.313    0.000 scriptTweetToJms.py:35(getGeos)
+  1023055   35.116    0.000 1089.183    0.001 scriptTweetToJms.py:55(getTime)
+        1  127.292  127.292 4426.141 4426.141 scriptTweetToJms.py:70(main)
+        1    0.000    0.000    0.000    0.000 socket.py:182(__init__)
+        1    0.001    0.001    0.001    0.001 socket.py:189(close)
+       48    0.003    0.000    0.013    0.000 sre_compile.py:184(_compile_charset)
+       48    0.004    0.000    0.007    0.000 sre_compile.py:213(_optimize_charset)
+       14    0.000    0.000    0.000    0.000 sre_compile.py:24(_identityfunction)
+        1    0.000    0.000    0.000    0.000 sre_compile.py:264(_mk_bitmap)
+        3    0.000    0.000    0.000    0.000 sre_compile.py:360(_simple)
+        4    0.001    0.000    0.005    0.001 sre_compile.py:367(_compile_info)
+     48/4    0.010    0.000    0.032    0.008 sre_compile.py:38(_compile)
+        8    0.000    0.000    0.000    0.000 sre_compile.py:480(isstring)
+        4    0.000    0.000    0.038    0.009 sre_compile.py:486(_code)
+        4    0.000    0.000    0.075    0.019 sre_compile.py:501(compile)
+       96    0.001    0.000    0.002    0.000 sre_compile.py:57(fixup)
+       41    0.001    0.000    0.001    0.000 sre_parse.py:132(__len__)
+      146    0.002    0.000    0.003    0.000 sre_parse.py:136(__getitem__)
+        3    0.000    0.000    0.000    0.000 sre_parse.py:140(__setitem__)
+       89    0.001    0.000    0.002    0.000 sre_parse.py:144(append)
+     51/7    0.003    0.000    0.005    0.001 sre_parse.py:146(getwidth)
+        6    0.000    0.000    0.000    0.000 sre_parse.py:184(__init__)
+      301    0.008    0.000    0.012    0.000 sre_parse.py:188(__next)
+      160    0.002    0.000    0.006    0.000 sre_parse.py:201(match)
+      206    0.003    0.000    0.012    0.000 sre_parse.py:207(get)
+       11    0.000    0.000    0.000    0.000 sre_parse.py:216(isident)
+       11    0.000    0.000    0.000    0.000 sre_parse.py:222(isname)
+        5    0.000    0.000    0.000    0.000 sre_parse.py:231(_class_escape)
+       23    0.000    0.000    0.001    0.000 sre_parse.py:263(_escape)
+     16/4    0.002    0.000    0.037    0.009 sre_parse.py:307(_parse_sub)
+     36/4    0.008    0.000    0.036    0.009 sre_parse.py:385(_parse)
+        4    0.000    0.000    0.037    0.009 sre_parse.py:669(parse)
+        2    0.000    0.000    0.001    0.000 sre_parse.py:697(parse_template)
+        3    0.000    0.000    0.000    0.000 sre_parse.py:704(literal)
+        4    0.000    0.000    0.000    0.000 sre_parse.py:73(__init__)
+       12    0.000    0.000    0.000    0.000 sre_parse.py:78(opengroup)
+       12    0.000    0.000    0.000    0.000 sre_parse.py:89(closegroup)
+       48    0.000    0.000    0.000    0.000 sre_parse.py:96(__init__)
+        2    0.000    0.000    0.000    0.000 threading.py:101(__init__)
+        1    0.000    0.000    0.000    0.000 threading.py:116(acquire)
+        1    0.000    0.000    0.000    0.000 threading.py:136(release)
+        1    0.000    0.000    0.000    0.000 threading.py:154(_acquire_restore)
+        1    0.000    0.000    0.000    0.000 threading.py:162(_release_save)
+        1    0.000    0.000    0.000    0.000 threading.py:172(_is_owned)
+        5    0.000    0.000    0.001    0.000 threading.py:176(Condition)
+        5    0.000    0.000    0.001    0.000 threading.py:181(__init__)
+  1023057   17.302    0.000   26.119    0.000 threading.py:221(_is_owned)
+        1    0.000    0.000    0.003    0.003 threading.py:230(wait)
+  1023057   29.226    0.000   63.499    0.000 threading.py:272(notify)
+        1    0.000    0.000    0.000    0.000 threading.py:303(__init__)
+  1023057   38.359    0.000   64.678    0.000 threading.py:310(acquire)
+  1023057   47.322    0.000  136.433    0.000 threading.py:331(release)
+        1    0.000    0.000    0.000    0.000 threading.py:344(BoundedSemaphore)
+        1    0.000    0.000    0.000    0.000 threading.py:349(__init__)
+  1023057   20.715    0.000  157.148    0.000 threading.py:353(release)
+        1    0.000    0.000    0.001    0.001 threading.py:359(Event)
+        1    0.000    0.000    0.000    0.000 threading.py:366(__init__)
+        2    0.000    0.000    0.000    0.000 threading.py:371(isSet)
+        1    0.000    0.000    0.000    0.000 threading.py:391(wait)
+        1    0.000    0.000    0.000    0.000 threading.py:401(_newname)
+        1    0.000    0.000    0.001    0.001 threading.py:426(__init__)
+        1    0.000    0.000    0.000    0.000 threading.py:446(_set_daemon)
+        1    0.000    0.000    0.000    0.000 threading.py:463(start)
+       10    0.000    0.000    0.000    0.000 threading.py:59(__init__)
+  3069177   24.958    0.000   24.958    0.000 threading.py:64(_note)
+        1    0.000    0.000    0.000    0.000 threading.py:683(daemon)
+        1    0.000    0.000    0.000    0.000 threading.py:688(daemon)
+        1    0.000    0.000    0.000    0.000 threading.py:808(currentThread)
+        2    0.000    0.000    0.000    0.000 threading.py:96(RLock)
+  1023057   40.979    0.000   66.590    0.000 utils.py:130(merge_headers)
+
+

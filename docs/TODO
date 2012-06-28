@@ -1,0 +1,58 @@
+
+PROCESSING:
+===========
+1. Finish anomaly detection									DONE
+2. Think about reducing size of document keys				
+3. Look at other data sources
+	- flickr
+	- panoramia
+	- instagram
+	- foursquares
+
+4. In periodGeAlertProcess, checkForAnomalies() finds the right
+   dictionary elements based on the existence of 'hrs' or 'days'.
+   This is so that if the baseline types change, this function
+   shouldn't have to change too much. It would be a good idea to
+   change the format of the baseline information so that it is either
+   in a subdocument OR the keys for each of the baselines have a standard
+   prefix: blv_. The subdoc is probably better.
+
+INPUT:
+======
+1. Build a JMS tweet reader to take tweets from Grahams JMS
+2. Thread the inserting function
+3. DONE - Read up on parallelised inserting in mongo
+4. Potentially improve the precision of the array blocks. Instead of using hour blocks within days, perhaps use
+   10 minute blocks? A pre-aggregation talk at mongo uk discussed how traversing/searching for the item to update
+   could be quicker if traverses through subdocs rather than a full array. If you see if slowing down throughout
+   the day, this could be an indication.
+
+5. Add in other fields within the timeseries document - total count for the day. Total count per hour?
+   This might help with simple plotting. Minute level still important for stats.
+   
+
+OUTPUT:
+=======
+1. DONE - Push anomalies out to JMS - for Graham
+2. Django app to push geojson to leaflet - Leo
+3. Build standalone function for time series querying and returning
+4. Work out why I get an error on jms disconnect()
+
+CORRELATION:
+============
+Get camera locations
+Get landmarks of interest locations - or service
+Build a lookup service
+
+TWITTER:
+Potential sources of location information from tweets:
+
+1. Coordinates in the tweet - a geolocated tweet
+2. location field in the user dictionary - broad area, where do they live, etc.
+3. place docs attributed to the tweet. Mine each of the place bboxes to extract the geos - can be attached to the tweet or about a location (but not from there)
+4. Gazetteer lookup for non-hashtagged words. Could use a wiki-based geo-lookup or twitter geo lookup
+5. Gaz lookup based on landmarks and other non-placename geo entities - especially for wiki-based geo-lookup
+6. The fact that they're on a mobile device... - 
+
+
+

@@ -1,0 +1,24 @@
+Load of 20,000 tweets from VAST onto the JMS took  0:03:40.698075
+Works out at ~90 tweets per second.
+
+# To set up a listener, use the following command line
+python /Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/src/scripts/kywdJmsHander.py /queue/test.tweets
+
+1 Listener:
+========
+Start:   2012-06-11 21:34:46.836509
+Finish: 2012-06-11 21:40:22.193523
+00:05:35
+
+4 Listeners:
+========
+Start:   2012-06-11 21:53:48.885884
+Finish: 2012-06-11 21:57:53.284094
+00:04:05
+
+4 listeners = 1.5minutes quicker.
+
+20,000 tweets processed in 4mins 5seconds
+
+00:04:05 = 245seconds
+81 tweets into timeseries objects per second.
