@@ -51,7 +51,7 @@ def run_server():
 # do we have a connection to the server?
 connected = False
 
-path = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/docs/"
+path = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/config/"
 file = "jmsConfig.cfg"
 hosts = getConfig(path, file)
 listenerName = 'listener_%s' %random.randint(0,10000)

@@ -24,10 +24,10 @@ class Test(unittest.TestCase):
         dbh = mdb.setupCollections(dbh, dropCollections=True)
 
         # Chuck in a dummy baseline doc
-        docs = [{"mgrs" : "38SND4595706622", "keyword" : "keyword1", "timeStamp" : datetime.datetime(2012,4,30,14,5), "mgrs_precision" : 10},
-                {"mgrs" : "38SND4595706622", "keyword" : "keyword2", "timeStamp" : datetime.datetime(2012,4,30,14,3), "mgrs_precision" : 10},
-                {"mgrs" : "38SND4593006630", "keyword" : "keyword2", "timeStamp" : datetime.datetime(2012,4,30,14,5), "mgrs_precision" : 10},
-                {"mgrs" : "38SND4506", "keyword" : "keyword2", "timeStamp" : datetime.datetime(2012,4,30,14,1), "mgrs_precision" : 4}]
+        docs = [{"mgrs" : "38SND4595706622", "keyword" : "keyword1", "timeStamp" : datetime.datetime(2012,4,30,14,5), "mgrsPrecision" : 10},
+                {"mgrs" : "38SND4595706622", "keyword" : "keyword2", "timeStamp" : datetime.datetime(2012,4,30,14,3), "mgrsPrecision" : 10},
+                {"mgrs" : "38SND4593006630", "keyword" : "keyword2", "timeStamp" : datetime.datetime(2012,4,30,14,5), "mgrsPrecision" : 10},
+                {"mgrs" : "38SND4506", "keyword" : "keyword2", "timeStamp" : datetime.datetime(2012,4,30,14,1), "mgrsPrecision" : 4}]
         
         collectionHandle = dbh['baseline']
         

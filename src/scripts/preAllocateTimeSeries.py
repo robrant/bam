@@ -134,12 +134,12 @@ def buildBlankData(hours=24, mins=60):
 def insertDoc(collectionHandle, mgrs, mgrsPrecision, keyword, source, start, blankData):
     ''' Builds a mongo document and inserts it. TESTED '''
     
-    doc = {'mgrs'           : mgrs,
-           'mgrs_precision' : mgrsPrecision,
-           'keyword'        : keyword,
-           'start'          : start,
-           'data'           : blankData,
-           'blank'          : True
+    doc = {'mgrs'          : mgrs,
+           'mgrsPrecision' : mgrsPrecision,
+           'keyword'       : keyword,
+           'start'         : start,
+           'data'          : blankData,
+           'blank'         : True
            }
 
     try:
@@ -157,7 +157,7 @@ def getCommonMgrsAndKeyword(collHandle, mgrsPrecision, nothingFound, today, look
 
     # Get yesterday's date
     queryStart = today - datetime.timedelta(days=lookback)
-    condition = {'mgrs_precision':mgrsPrecision, 'start':{'$gte':queryStart}}
+    condition = {'mgrsPrecision':mgrsPrecision, 'start':{'$gte':queryStart}}
     
     key = ['keyword','mgrs']
     initial={'count':0}
@@ -196,7 +196,7 @@ def getCommonMgrsAndKeyword(collHandle, mgrsPrecision, nothingFound, today, look
 def main():
     
     # Config file parameters
-    pathIn = '/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/docs/'
+    pathIn = '/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/config/'
     fileIn = 'preAllocateTimeSeries.cfg'
     
     # Get parameters from config

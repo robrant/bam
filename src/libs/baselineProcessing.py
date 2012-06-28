@@ -349,7 +349,7 @@ def getAllForCellCluster(dbh, keyword):
     q = {"mgrs"             : keyword.mgrs,
          "keyword"          : keyword.keyword,
          "start"            : keyword.start,
-         'mgrs_precision'   : keyword.mgrsPrecision}
+         'mgrsPrecision'   : keyword.mgrsPrecision}
      
     count = dbh.timeseries.find(q).count()
     

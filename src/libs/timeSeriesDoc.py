@@ -61,7 +61,6 @@ class timeSeries():
         
         # Re-assign the time series, source and keyword
         self.timeStamp = kw.timeStamp
-        self.source    = kw.source
         self.keyword   = kw.keyword
         
         # The start date of the time series
@@ -141,9 +140,8 @@ class timeSeries():
             blankData[self.timeStamp.hour][self.timeStamp.minute] = incrementBy
             
             doc = {'mgrs'           : self.mgrs,
-                   'mgrs_precision' : self.mgrsPrecision,
+                   'mgrsPrecision'  : self.mgrsPrecision,
                    'keyword'        : self.keyword,
-                   'source'         : self.source,
                    'start'          : self.start,
                    'data'           : blankData
                    }
@@ -204,9 +202,8 @@ class timeSeries():
 
         self.start          = doc['start']
         self.mgrs           = doc['mgrs']
-        self.mgrsPrecision  = doc['mgrs_precision']
+        self.mgrsPrecision  = doc['mgrsPrecision']
         self.tag            = doc['tag']
-        self.source         = doc['source']
         
         # Put the time series data into a flat (1D) array representing the whole day
         dataIn    = doc['data']

@@ -62,10 +62,10 @@ def getCountsForActiveCells(collectionHandle, timeStamp, lookback, mgrs, mgrsPre
     dayStart = minTimeStamp.replace(hour=0,minute=0,second=0,microsecond=0)
     
     # Build the query
-    q = {'mgrs'           : str(mgrs),
-         'mgrs_precision' : mgrsPrecision,
-         'keyword'        : str(keyword),
-         'start'          : dayStart
+    q = {'mgrs'          : str(mgrs),
+         'mgrsPrecision' : mgrsPrecision,
+         'keyword'       : str(keyword),
+         'start'         : dayStart
          }
     
     try:   

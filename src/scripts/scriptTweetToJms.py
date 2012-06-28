@@ -80,11 +80,12 @@ def main():
     hostIn      = 'localhost'
     portIn      = 61613
     # File Path Info
-    path = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/data/"
+    path       = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/data/"
+    configPath = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/config/"
     fName= "MicroblogsOrdered.csv"
     # Read in a twitter template
     templateName = 'recordTemplate.json'
-    templateFile = open(os.path.join(path, templateName))
+    templateFile = open(os.path.join(configPath, templateName))
     template = json.loads(templateFile.read())
     
     # Make the JMS connection via STOMP and the jmsCode class    
@@ -104,12 +105,14 @@ def main():
             x+=1
             continue
         
-        if x % 20000 == 0:
+        if x % 2000 == 0:
             print "Processed: ", x
             counterTimer = datetime.datetime.utcnow()
             intermediateTimer = counterTimer - lastTimer
             lastTimer = datetime.datetime.utcnow()
-            print "20,000 taken: %s" %intermediateTimer
+            print "2,000 taken: %s" %intermediateTimer
+        
+        if x % 500000 == 0:
             jms.disConnect()
             f.close()
             sys.exit()

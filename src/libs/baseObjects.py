@@ -70,97 +70,6 @@ class validation(object):
         
         return lon, lat
  
- 
-################################################################################################
-################################################################################################
-
-
-class processEvent():
-
-    def __init__(self, event, source, mgrsPrecision):
-        ''' Takes a single argument: a single event object - see module baseObjects'''
-        
-        # The event object being passed into this class
-        self.ev = event
-        self.source = source
-        self.mgrsPrecision = mgrsPrecision
-
-        # The list of keywords to be returned following processing
-        self.keywords = []
-        
-#-----------------------------------------------------------------------------------------
-
-    def buildKeywordObject(self, token):
-        ''' Builds the keyword base objects from the functions'''
-        
-        kw = keyword(keyword   = str(token),
-                     timeStamp = self.ev.timeStamp,
-                     lat       = self.ev.lat,
-                     lon       = self.ev.lon,
-                     text      = self.ev.text,
-                     eventId   = self.ev.eventId,
-                     userId    = self.ev.userId,
-                     source    = self.source,
-                     mgrsPrecision=self.mgrsPrecision)
-                                    
-        self.keywords.append(kw)
-
-#-----------------------------------------------------------------------------------------
-
-    def fromHashTag(self):
-        '''Builds a keyword object based on the hashtag list in the incoming event object'''
-        
-        # Bail if no hashtags
-        if not self.ev.hashTags:
-            return None
-        
-        # For each hashtag, build a keyword object
-        for ht in self.ev.hashTags:    
-            self.buildKeywordObject(ht)
-        else:
-            return None
-                    
-#-----------------------------------------------------------------------------------------
-
-    def fromLookup(self, lookup):
-        ''' Builds new keywords based on a keyword gazetteer.
-            Needs massive improvement - aliases, partial matching, spelling difs. ''' 
-        
-        # Splits the text up into words
-        regExp = re.compile(r'(\b\w+\b)')
-        regOut = re.findall(regExp, self.ev.text) 
-        
-        if not regOut:
-            return None
-        
-        # If the word is in the LOOKUP (provided up top), but not in the hashtag list (ie. duped)
-        # then add it to the list of keywords to be processed.
-        for token in regOut:
-            if self.ev.hashTags and token.lower() in self.ev.hashTags:
-                continue 
-            elif token.lower() in lookup:
-                self.buildKeywordObject(token)
-
-#-----------------------------------------------------------------------------------------
-
-    def whenNothingFound(self, tokenName = '--nothingfound--'):
-        ''' When nothing is found in the event content, rather than lose the observation,
-            this function builds a '--nothingFound--' keyword object'''
-        
-        self.buildKeywordObject(tokenName)
-        
-#-----------------------------------------------------------------------------------------
-
-    def fromNLP(self):
-        ''' Uses NLP to identify entities. 
-            Perhaps combining LOOKUP, NLP and Geo searches with something like NLTK:
-            http://www.packtpub.com/python-text-processing-nltk-20-cookbook/book''' 
-
-#-----------------------------------------------------------------------------------------
-
-    def fromFullMessage(self, path, fName):
-        ''' Process every significant word into a keyword object to process. ''' 
-
 ################################################################################################
 ################################################################################################
 
@@ -179,7 +88,7 @@ class eventRecord(validation):
         self.eventId        = self.checkRecordId(record)
         self.userId         = self.checkUserId(record)
         self.platform       = self.sourcePlatform(record)
-         
+
     #-------------------------------------------------------------------------------------------------
 
     def sourcePlatform(self, record):
@@ -307,54 +216,100 @@ class eventRecord(validation):
         else:
             return None
 
-       
+
+
 ################################################################################################
 ################################################################################################
 
 
-class eventRecordVast(validation):
-    
-    
-    def __init__(self):
-        '''Constructor only'''
+class processEvent():
 
-    #-------------------------------------------------------------------------------------------------
-    
-    def importData(self, eventId=None, timeStamp=None, lat=None, lon=None, text=None, userId=None):
+    def __init__(self, event, source, mgrsPrecision):
+        ''' Takes a single argument: a single event object - see module baseObjects'''
         
-        ''' Object to hold an event (tweet, photo metadata, etc. Has one function built in for 
-            finding hashtags - primarily for twitter. Others could be added for standard types.'''
+        # The event object being passed into this class
+        self.ev = event
+        self.source = source
+        self.mgrsPrecision = mgrsPrecision
 
-        self.timeStamp     = self.validateTime(timeStamp)
-        self.lat, self.lon = self.validateGeos(lon, lat)
-        self.text          = self.validateText(text)
-        self.hashTags      = self.findHashTagsAdvanced(text)
-        self.eventId       = eventId
-        self.userId        = userId
+        # The list of keywords to be returned following processing
+        self.keywords = []
         
-#------------------------------------------------------------------------------------------ 
+#-----------------------------------------------------------------------------------------
 
-    def findHashTagsAdvanced(self, text, user=None):
-        ''' Function to extract hashtags from a string of text.
-            This will not pick out those with punctuation - '_', '-', etc.
-            From: http://stackoverflow.com/questions/2527892/parsing-a-tweet-to-extract-hashtags-into-an-array-in-python
-            Tests written.'''
+    def buildKeywordObject(self, token):
+        ''' Builds the keyword base objects from the functions'''
         
-        if user: tag = '@'
-        else:    tag = '#'
+        kw = keyword(keyword   = str(token),
+                     timeStamp = self.ev.timeStamp,
+                     lat       = self.ev.lat,
+                     lon       = self.ev.lon,
+                     text      = self.ev.text,
+                     eventId   = self.ev.eventId,
+                     userId    = self.ev.userId,
+                     source    = self.source,
+                     platform  = self.ev.platform,
+                     mgrsPrecision=self.mgrsPrecision)
+                                    
+        self.keywords.append(kw)
+
+#-----------------------------------------------------------------------------------------
+
+    def fromHashTag(self):
+        '''Builds a keyword object based on the hashtag list in the incoming event object'''
         
-        # This regex returns a triple for each match: (space, #, hashtag).
-        UTF_CHARS = ur'a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff'
-        TAG_EXP = ur'(^|[^0-9A-Z&/]+)(%s|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)' %(tag, UTF_CHARS)
-        x = re.compile(TAG_EXP, re.UNICODE | re.IGNORECASE)        
-        hts = x.findall(text)
-        
-        htsOut = list(ht[-1].lower() for ht in hts)
-        if len(htsOut) > 0:
-            return htsOut
-        else:
+        # Bail if no hashtags
+        if not self.ev.hashTags:
             return None
         
+        # For each hashtag, build a keyword object
+        for ht in self.ev.hashTags:    
+            self.buildKeywordObject(ht)
+        else:
+            return None
+                    
+#-----------------------------------------------------------------------------------------
+
+    def fromLookup(self, lookup):
+        ''' Builds new keywords based on a keyword gazetteer.
+            Needs massive improvement - aliases, partial matching, spelling difs. ''' 
+        
+        # Splits the text up into words
+        regExp = re.compile(r'(\b\w+\b)')
+        regOut = re.findall(regExp, self.ev.text) 
+        
+        if not regOut:
+            return None
+        
+        # If the word is in the LOOKUP (provided up top), but not in the hashtag list (ie. duped)
+        # then add it to the list of keywords to be processed.
+        for token in regOut:
+            if self.ev.hashTags and token.lower() in self.ev.hashTags:
+                continue 
+            elif token.lower() in lookup:
+                self.buildKeywordObject(token)
+
+#-----------------------------------------------------------------------------------------
+
+    def whenNothingFound(self, tokenName = '--nothingfound--'):
+        ''' When nothing is found in the event content, rather than lose the observation,
+            this function builds a '--nothingFound--' keyword object'''
+        
+        self.buildKeywordObject(tokenName)
+        
+#-----------------------------------------------------------------------------------------
+
+    def fromNLP(self):
+        ''' Uses NLP to identify entities. 
+            Perhaps combining LOOKUP, NLP and Geo searches with something like NLTK:
+            http://www.packtpub.com/python-text-processing-nltk-20-cookbook/book''' 
+
+#-----------------------------------------------------------------------------------------
+
+    def fromFullMessage(self, path, fName):
+        ''' Process every significant word into a keyword object to process. ''' 
+
+
 ################################################################################################
 ################################################################################################
 
@@ -372,7 +327,7 @@ class keyword(validation):
     '''
 
     def __init__(self, keyword=None, timeStamp=None, lat=None, lon=None, text=None,
-                 eventId=None, userId=None, source=None, mgrsPrecision=6):
+                 eventId=None, userId=None, source=None, platform=None, mgrsPrecision=6):
         ''' Constructor. Validation of latlon and time are handled by inheriting the validation class.                - '''
         
         # If the class is called without a json object
@@ -380,6 +335,7 @@ class keyword(validation):
         self.text           = text.lower()
         self.userId         = userId
         self.source         = source.lower()
+        self.platform       = platform
         self.created        = datetime.datetime.utcnow()
         self.eventId        = eventId
         self.mgrsPrecision  = mgrsPrecision
@@ -395,7 +351,7 @@ class keyword(validation):
         else:
             self.mgrs  = None    
 
-    #------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------
         
     def getMGRS(self, precision=10):
         ''' Converts the geos to MGRS. The optional precision determines the number of figures for
@@ -436,9 +392,8 @@ class keyword(validation):
             for generating count statistics per cell.'''        
         
         doc = {'mgrs'           : self.mgrs,
-               'mgrs_precision' : self.mgrsPrecision,
+               'mgrsPrecision' : self.mgrsPrecision,
                'keyword'        : self.keyword,
-               'source'         : self.source,
                'timestamp'      : self.timeStamp,
                'userId'        : self.userId,
                'eventId'       : self.eventId
@@ -455,22 +410,11 @@ class keyword(validation):
 #------------------------------------------------------------------------------------------------
         
     def getGeoGazetteerLookup(self):
-        ''' Searches the text string for place names that could be geolocated.'''
-        
+        ''' Improving the geo for non-geo tagged tweets using text processing methods.'''
+
         '''
-        
-        Only necessary where there isn't a geo...
-        
-        Tube stations - tuffnell park
-        Boroughs - 
-        Major London centres - westminster, oxford street.
-        Buildings and landmarks - parliament, big ben, trafalgar square,
-        Different precisions associated with these?
-        
-        **** THIS IS SOMETHING THAT COULD BE DONE ONLINE? ****
-        or possibly a combination - quick check against a local gaz
-        and then accurate coords retrieved from OS?
-        
-        Can possibly use wikipedia and infochimps for this...
+        1. Wikipedia-based lookup
+        2. Lookup of words agains the twitter places api
+        3. landmarks lookup?
         
         '''

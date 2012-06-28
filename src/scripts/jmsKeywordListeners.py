@@ -46,7 +46,7 @@ class keywordListener(stomp.ConnectionListener):
             a blank data array for easy inserting. '''
 
         # Reads in a load of config information
-        path = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/docs/"
+        path = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/config/"
         file = "keywordListenerConfig.cfg"
         self.getConfig(path, file)
         
