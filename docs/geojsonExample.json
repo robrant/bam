@@ -1,0 +1,5 @@
+{"type": "FeatureCollection",
+ "features": [{"geometry": {"type": "Polygon",
+			    "coordinates": [[[42.210927698912379, 93.344036335933353],
+					     [42.210936701647633, 93.344036335933353], 		[42.210936701647633, 93.344048445907731], [42.210927698912379, 93.344048445907731]]]},
+"type": "Feature", "properties": {"mgrs": "46TEM2839873253", "days30_all": 0.39785397271032241, "days7_all": 0.41543298555968944, "timeStamp": "2011-04-30T00:50:00", "days7_daily": 0.81320260181237702, "value": 8, "hrs30_all": 0.48016033673629693, "mgrsPrecision": 10, "days30_weekly": 0.81320260181237669, "duration": 600}, "id": "xxxxnothingfoundxxxx"}]}

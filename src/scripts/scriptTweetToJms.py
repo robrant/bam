@@ -76,7 +76,7 @@ def main():
     lastTimer = datetime.datetime.utcnow()
     
     # JMS PARAMETERS
-    destination = '/queue/test.tweets'
+    destination = '/queue/tweets'
     hostIn      = 'localhost'
     portIn      = 61613
     # File Path Info
@@ -112,7 +112,7 @@ def main():
             lastTimer = datetime.datetime.utcnow()
             print "2,000 taken: %s" %intermediateTimer
         
-        if x % 500000 == 0:
+        if x % 2000 == 0:
             jms.disConnect()
             f.close()
             sys.exit()

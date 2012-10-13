@@ -183,12 +183,15 @@ class eventRecord(validation):
     def getGeos(self, record):
         ''' Extract the lat and lon'''
 
-        if record.has_key('coordinates') == True:
+        
+        if record.has_key('coordinates') == True and record['coordinates'] != 'null' and record['coordinates'] != None:
+            print "succeed", record['coordinates']
             if record['coordinates']['type']:
                 lon, lat = record['coordinates']['coordinates']
             else:
                 print 'not point type geo.'
         else:
+            print "Failed", record['id']
             lon, lat = None, None
             
         return lon, lat
@@ -240,7 +243,12 @@ class processEvent():
     def buildKeywordObject(self, token):
         ''' Builds the keyword base objects from the functions'''
         
-        kw = keyword(keyword   = str(token),
+        try:
+            tknKywd = str(token)
+        except:
+            tknKywd = '**ignore**'
+            
+        kw = keyword(keyword   = tknKywd,
                      timeStamp = self.ev.timeStamp,
                      lat       = self.ev.lat,
                      lon       = self.ev.lon,

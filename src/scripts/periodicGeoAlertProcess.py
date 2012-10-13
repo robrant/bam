@@ -8,6 +8,8 @@ for dirx in importDir:
 # Standard libs
 import datetime
 import time
+import os
+import ConfigParser
 
 # FOSS
 import numpy as np          # Array handling
@@ -18,6 +20,86 @@ import Geographic           # For several geographic functions
 import mdb                  # Wrapper for Mongo Connections
 import mgrs as mgrsLib      # A C library for mgrs <--> LL conversion
 import jmsCode              # Access to JMS communicating functions
+import math
+
+#===================================================================================================
+
+class getConfig(object):
+    '''    '''
+
+    def __init__(self, path, configFile):
+        '''    '''
+        
+        self.getConfigFile(path, configFile)
+        self.getParameters()
+        
+#--------------------------------------------------------------------------------
+    
+    def getConfigFile(self, path, file):
+        ''' Reads in a list of keywords from a config file. '''
+        
+        self.config = ConfigParser.ConfigParser()
+        try:
+            self.config.read(os.path.join(path, file))
+        except:
+            print "Failed to read the config file for keyword lookup."
+
+#--------------------------------------------------------------------------------            
+    
+    def getParameters(self):
+        
+        # Default Parameters
+        try:
+            self.verbose        = self.config.getboolean("misc", "verbose")
+            self.mgrsPrecision  = self.config.getint('misc', "mgrsPrecision")
+            self.lookback       = self.config.getint('misc', "lookback")
+        except Exception, e:
+            print "========== ERROR ON DEFAULT PARAM CONFIG PARSING =========="
+            print e
+            print "========== ERROR ON DEFAULT PARAM CONFIG PARSING =========="
+        
+        # Mongo parameters
+        try:
+            self.mHost = self.config.get("mongo", "host")
+            self.mPort = self.config.getint("mongo", "port")
+            self.mDb   = self.config.get("mongo", "db")
+            try:
+                self.user     = self.config.get("mongo", "user")
+                self.password = self.config.get("mongo", "password")
+            except:
+                pass
+
+            self.baseColl   = self.config.get("mongo", "baseCollection")
+            self.cellColl   = self.config.get("mongo", "cellCollection")
+            self.alertsColl = self.config.get("mongo", "alertsCollection")
+            self.tsColl     = self.config.get("mongo", "tsCollection")
+            
+            self.storeCell  = self.config.getboolean("mongo", 'storeCell')
+            
+        except Exception, e:
+            print "========== ERROR ON MONGO CONFIG PARSING =========="
+            print e
+            print "========== ERROR ON MONGO CONFIG PARSING =========="
+
+        # JMS Parameters
+        try:
+            self.publishJms   = self.config.getboolean("jms", "jmsPublish")
+            self.jDestination = self.config.get("jms", "jmsDestination")
+            self.jHost        = self.config.get("jms", "jmsHost")
+            self.jPort        = self.config.getint("jms", "jmsPort")
+        except Exception, e:
+            print "========== ERROR ON MONGO CONFIG PARSING =========="
+            print e
+            print "========== ERROR ON MONGO CONFIG PARSING =========="
+        
+        print self.publishJms
+        
+#===================================================================================================
+
+
+
+
+
 
 def getActiveCells(collectionHandle, timeStamp, lookback=60, mgrsPrecision=None):
     ''' Retrieves those cells that were active in the last minute - determined thru
@@ -98,7 +180,73 @@ def getCountsForActiveCells(collectionHandle, timeStamp, lookback, mgrs, mgrsPre
 
 #-------------------------------------------------------------------------------------------
 
-def buildPolygon(mgrs=None, mgrsPrecision=10):
+def buildPolygon(m, mgrs=None, mgrsPrecision=10):
+    ''' Builds a polygon that represents the mgrs box.
+        NOT TESTED
+         '''
+
+    # Get the SW corner Lat and Lon
+    swLat, swLon = m.toLatLon(str(mgrs))
+    # Extending a vector into the other cells to retrieve their coords and then mgrs
+    offSetMultiplier = 1.5
+    
+    # Get the sidelength of 1 cell and extends it to ensure the checking vector hits inside the adjacent cell
+    displacement = (Geographic.getMgrsPrecision(mgrsPrecision))
+    displacement *= offSetMultiplier
+    
+    # Determine the cell side length from MGRS precision
+    latScale, lonScale = Geographic.radialToLinearUnits(swLat)
+    scale = 1.0/latScale
+    displacement = float(displacement) * float(scale)
+    
+    nLat, nLon   = getAdjacentCellCoords(m, mgrsPrecision, swLat, swLon, 10.0, displacement)
+    neLat, neLon = getAdjacentCellCoords(m, mgrsPrecision, swLat, swLon, 45.0, displacement)
+    eLat, eLon   = getAdjacentCellCoords(m, mgrsPrecision, swLat, swLon, 80.0, displacement)
+    
+    coords = [[swLon, swLat],
+              [nLon,  nLat],
+              [neLon, neLat],
+              [eLon,  eLat],
+              [swLon, swLat]]
+    
+    return coords
+
+#----------------------------------------------------------------------------------------------------
+def getAdjacentCellCoords(m, mgrsPrecision, minLat, minLon, inBearing, displacement):
+    ''' Displaces a coordinate from a start coordinate (in a plane) to get a new lat/lon.
+        Converts that lat/lon back into mgrs for the cell and converts that to Lat/Lon
+        to get the SW corner lat and lon.
+        
+        NOT TESTED
+        '''
+    
+    #___o____
+    #|     / 
+    #|    /
+    #|a  /h
+    #|  /
+    #| /
+    #|/
+    
+    #Check the Northern adjacent cell
+    bearing = math.radians(inBearing)
+    lonOffset = math.sin(bearing) * float(displacement)
+    latOffset = math.cos(bearing) * float(displacement)
+    
+    newLat = minLat + latOffset
+    newLon = minLon + lonOffset
+    print newLat, newLon, displacement
+    # Convert back to mgrs
+    cellMgrs = m.toMGRS(newLat, newLon, MGRSPrecision=mgrsPrecision/2)
+    cellLat, cellLon = m.toLatLon(str(cellMgrs))
+    
+    return cellLat, cellLon
+
+#----------------------------------------------------------------------------------------------------
+
+
+"""
+def oldBuildPolygon(mgrs=None, mgrsPrecision=10):
     ''' Builds a polygon that represents the mgrs box.
         TESTED - NEED TO CHECK. '''
 
@@ -132,9 +280,9 @@ def buildPolygon(mgrs=None, mgrsPrecision=10):
     coords = [bl, tl, tr, br]
     
     return coords
-
+"""
 #----------------------------------------------------------------------------------------------------
-    
+
 def getThisMinute(timeStamp):
     ''' Gets the timestamp for this minute.
         THINK ABOUT MAKING THIS A MORE GENERALLY ACCESSIBLE FUNCTION.
@@ -179,7 +327,7 @@ def buildGeoJson(keyword, coords, mgrs, mgrsPrecision, timeStamp, duration, valu
     collection = geojson.feature.FeatureCollection(features=geoms)
 
     # Dump the geojson as a string
-    geoJsonDoc = geojson.dumps(collection)
+    geoJsonDoc = geojson.dumps(geom)
     
     # Return the geojson doc as a dictionary
     return geoJsonDoc
@@ -191,7 +339,7 @@ def reformatGeoJsonTime(geoJsonString):
     
     # Then dump and load it to get it into a dictionary
     geoJsonDoc    = geojson.loads(geoJsonString)
-    geoJsonDoc['features'][0]['properties']['timeStamp'] = datetime.datetime.strptime(geoJsonDoc['features'][0]['properties']['timeStamp'], '%Y-%m-%dT%H:%M:%S')
+    geoJsonDoc['properties']['timeStamp'] = datetime.datetime.strptime(geoJsonDoc['properties']['timeStamp'], '%Y-%m-%dT%H:%M:%S')
     return geoJsonDoc
 
 #-------------------------------------------------------------------------------------------
@@ -228,33 +376,25 @@ def checkForAnomalies(doc, currentCount):
 
 #-------------------------------------------------------------------------------------------
 
+def main(timeStamp=None):
+    
+    '''
 
-def main(timeStamp=None, mgrsPrecision=0, lookback=600, baseColl='baseline', cellColl='mapping', alertsColl='alerts', tsColl='timeseries'):
-    
     '''
-    Function runs periodically and checks a series of values against the baseline.
+    print 'in main'
     
-    1. Retrieves all the active keyword/mgrs combinations that were active in the last period
-    2. Gets the count for each of those cells
-    3. GEO: Builds an mgrs cell
-    4. GEO: Builds a geojson object
-    5. GEO: Inserts that into a mapping collection
-    
-    6. ANO: 
-    
-    '''
+    # Get the config params into a object
+    path = "/Users/brantinghamr/Documents/Code/eclipseWorkspace/bam/config"
+    file = "periodicGeoAlert.cfg"
+    params = getConfig(path,file)
 
     # Make the JMS connection via STOMP and the jmsCode class
-    destination = '/topic/test.bam.alerts'
-    hostIn      = 'localhost'
-    portIn      = 61613
-    jms = jmsCode.jmsHandler(hostIn, portIn, verbose=True)
-    jms.connect()
-
-    # Mongo connection parameters
-    host = 'localhost'
-    port = 27017
-    db   = 'bam'
+    if params.publishJms:
+        jms = jmsCode.jmsHandler(params.jHost, params.jPort, verbose=params.verbose)
+        jms.connect()
+        
+    # Instantiate the mgrs lib
+    m = mgrsLib.MGRS()
 
     # Time Variables
     if not timeStamp:
@@ -265,57 +405,66 @@ def main(timeStamp=None, mgrsPrecision=0, lookback=600, baseColl='baseline', cel
     nowMinute = getThisMinute(now)
     
     # Connect and get handle
-    c, dbh = mdb.getHandle(host, port, db)
+    c, dbh = mdb.getHandle(params.mHost, params.mPort, params.mDb)
     
     # Assign collection handles to variables for easier passing
-    baseCollHandle  = dbh[baseColl]
-    tsCollHandle    = dbh[tsColl]
-    mapCollHandle   = dbh[cellColl]
+    baseCollHandle  = dbh[params.baseColl]
+    tsCollHandle    = dbh[params.tsColl]
+    mapCollHandle   = dbh[params.cellColl]
     
     # Retrieve the active cells
-    activeCells = getActiveCells(baseCollHandle, timeStamp=now, lookback=lookback, mgrsPrecision=mgrsPrecision)
+    activeCells = getActiveCells(baseCollHandle, timeStamp=now, lookback=params.lookback, mgrsPrecision=params.mgrsPrecision)
+    
+    fxx = open(path+'outGeoJson.gjsn', 'w')
     
     # Loop those active cells
     for activeCell in activeCells:
     
         kywd = activeCell['keyword']
         mgrs = activeCell['mgrs']
-        
+        print mgrs
         # The period for this count value
-        duration = datetime.timedelta(seconds=lookback)
-        
+        duration = datetime.timedelta(seconds=params.lookback)
+        print 'duration', duration
         # The coordinates of the polygon to be mapped from MGRS
-        coords = buildPolygon(mgrs, mgrsPrecision)
-        
+        coords = buildPolygon(m, mgrs, params.mgrsPrecision)
+        print 'coords: ', coords
         # The total count value for this mgrs/keyword/mgrsPrecision
-        count = getCountsForActiveCells(tsCollHandle, nowMinute, lookback, mgrs, mgrsPrecision, kywd)
-        
+        count = getCountsForActiveCells(tsCollHandle, nowMinute, params.lookback, mgrs, params.mgrsPrecision, kywd)
+        print 'count: %s' %count
         # ANOMALY: Get a list of metrics that indicated it was anomalous
-        anomalies = checkForAnomalies(activeCell, count)
+        #anomalies = checkForAnomalies(activeCell, count)
+        anomalies = None
         
         # A geoJson object representing all of this information
-        geoJson = buildGeoJson(kywd, coords, mgrs, mgrsPrecision, now, duration, count, anomalies)
+        geoJson = buildGeoJson(kywd, coords, mgrs, params.mgrsPrecision, now, duration, count, anomalies)
         
         # ANOMALY: If it was anomalous, push the geoJson to JMS
-        jms.sendData(destination, geoJson)
-        
+        if params.publishJms == True:
+            jms.sendData(params.jDestination, geoJson)
+            fxx.write(geoJson+'\n')
+            
         # Insert the geoJson into the mapping collection
-        success = insertGeoJson(mapCollHandle, reformatGeoJsonTime(geoJson))
-        
-    jms.disConnect()
+        if params.storeCell == True:
+            success = insertGeoJson(mapCollHandle, reformatGeoJsonTime(geoJson))
+            print 'success: %s' %success
+            
+    #jms.disConnect()
     mdb.close(c, dbh)
+    fxx.close()
     
 #========================================================================================================
 
+if __name__ == "__main__":
 
-startDate = datetime.datetime(2011,5,2,0,0,0)
-mgrsPrecision = 10
-
-for i in range(0,100):
+    startDate = datetime.datetime(2012,10,9,13,10,0)
     
-    processDate = startDate + datetime.timedelta(seconds=i*600)    
-    main(timeStamp=processDate, mgrsPrecision=mgrsPrecision, lookback=600, baseColl='baseline', cellColl='mapping', tsColl='timeseries', alertsColl='alerts')
-
-
-
-#main(timeStamp=datetime.datetime(2011,5,2,0,0,0), mgrsPrecision=2, lookback=600, baseColl='baseline', cellColl='mapping', tsColl='timeseries', alertsColl='alerts')
+    for i in range(0,50):
+        
+        processDate = startDate + datetime.timedelta(seconds=i*600)    
+        print i, processDate
+        
+        main(timeStamp=processDate)
+        #main(timeStamp=processDate, mgrsPrecision=4, lookback=600, baseColl='baseline', cellColl='mapping', tsColl='timeseries', alertsColl='alerts')
+        
+        

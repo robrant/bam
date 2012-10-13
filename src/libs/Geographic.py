@@ -182,12 +182,11 @@ def getMgrsPrecision(mgrsPrecision):
 
 #-------------------------------------------------------------------------------
 
-def radialToLinearUnits(latitude, units='metre'):
+def radialToLinearUnits(latitude):
     
     ''' Calculates the length of 1 degree of latitude and longitude at
-        a given latitude. Takes as arguments the latitude and the desired
-        ouput unit.
-        NEEDS TESTING '''
+        a given latitude. Takes as arguments the latitude being worked at.
+        Returns the length of 1 degree in metres. NEEDS TESTING '''
     
     # Work in radians
     lat = math.radians(latitude)
@@ -206,36 +205,6 @@ def radialToLinearUnits(latitude, units='metre'):
              (m4 * math.cos(5 * lat))
              
     lonLen = (p1 * math.cos(lat)) + (p2 * math.cos(3*lat)) + (p3 * math.cos(5*lat))
-    
-    # Length of 1 degree in lat and lon in metres
-    
-    if units.lower() == 'degrees':
-        pass
-    else:
-    
-        latLen = 1.0 / latLen
-        lonLen = 1.0 / lonLen
-
-        latLenFeet = latLen / 12*39.370079
-        lonLenFeet = lonLen / 12*39.370079
-
-        if units =='metres':
-            pass
-        
-        # Legnth of 1 degree in feet
-        elif units=='feet':
-            latLen = latLenFeet
-            lonLen = lonLenFeet
-
-        # lenth of a degree in miles
-        elif units=='statueMile':
-            latLen = latLen/5280.0
-            lonLen = lonLen/5280.0
-        
-        # Length of 1 degree in nautical miles
-        elif units=='nauticalMile':
-            latLen = (latLen/5280.0)/1.15077945
-            lonLen = (lonLen/5280.0)/1.15077945
         
     return latLen, lonLen
 

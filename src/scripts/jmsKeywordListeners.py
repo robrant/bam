@@ -139,6 +139,12 @@ class keywordListener(stomp.ConnectionListener):
             print 'No recognised source of data.'
             sys.exit()
         
+        print record.lat, record.lon, record.timeStamp
+        
+        if not record.lat or not record.lon or not record.timeStamp:
+            print 'Geo or time was not present, skipping this record.' 
+            return
+        
         # Goes from single tweet --> n-keywords
         kywd = processEvent(record, self.source, self.mgrsPrecision)
         

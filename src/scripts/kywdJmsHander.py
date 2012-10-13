@@ -66,8 +66,10 @@ while not connected:
         conn.start()
         conn.connect()
         # subscribe to the names que
+        
         conn.subscribe(destination=queue, ack='auto')
         connected = True
+    
     except socket.error:
         pass
     

@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Python FlickrAPI</title>
+<meta name="author" content="Sybren Stüvel" />
+<style type="text/css">
+
+@import url(html4css1.css);
+
+html {
+    color: black;
+    background-color: white;
+}
+
+body {
+    margin-left: 10ex;
+    margin-top: 5ex;
+    padding-left: 1ex;
+    border-left: 1px solid #006;
+
+    width: 75ex;
+    background-color: white;
+}
+
+h1 {
+    border-bottom: 2px solid #006;
+}
+
+p {
+    text-align: justify;
+}
+
+dt {
+    font-weight: bold;
+}
+
+</style>
+</head>
+<body>
+<div class="document" id="python-flickrapi">
+<h1 class="title">Python FlickrAPI</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Version:</th>
+<td>1.4</td></tr>
+<tr><th class="docinfo-name">Author:</th>
+<td>Sybren Stüvel</td></tr>
+</tbody>
+</table>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="#introduction" id="id1">1&nbsp;&nbsp;&nbsp;Introduction</a><ul class="auto-toc">
+<li><a class="reference internal" href="#concepts" id="id2">1.1&nbsp;&nbsp;&nbsp;Concepts</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calling-api-functions" id="id3">2&nbsp;&nbsp;&nbsp;Calling API functions</a><ul class="auto-toc">
+<li><a class="reference internal" href="#parsing-the-return-value" id="id4">2.1&nbsp;&nbsp;&nbsp;Parsing the return value</a></li>
+<li><a class="reference internal" href="#response-parser-elementtree" id="id5">2.2&nbsp;&nbsp;&nbsp;Response parser: ElementTree</a></li>
+<li><a class="reference internal" href="#elementtree-in-python-2-4" id="id6">2.3&nbsp;&nbsp;&nbsp;ElementTree in Python 2.4</a></li>
+<li><a class="reference internal" href="#response-parser-xmlnode" id="id7">2.4&nbsp;&nbsp;&nbsp;Response parser: XMLNode</a></li>
+<li><a class="reference internal" href="#erroneous-calls" id="id8">2.5&nbsp;&nbsp;&nbsp;Erroneous calls</a></li>
+<li><a class="reference internal" href="#unparsed-response-formats" id="id9">2.6&nbsp;&nbsp;&nbsp;Unparsed response formats</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#authentication" id="id10">3&nbsp;&nbsp;&nbsp;Authentication</a><ul class="auto-toc">
+<li><a class="reference internal" href="#authentication-callback" id="id11">3.1&nbsp;&nbsp;&nbsp;Authentication callback</a></li>
+<li><a class="reference internal" href="#authenticating-web-applications" id="id12">3.2&nbsp;&nbsp;&nbsp;Authenticating web applications</a></li>
+<li><a class="reference internal" href="#token-handling-in-web-applications" id="id13">3.3&nbsp;&nbsp;&nbsp;Token handling in web applications</a></li>
+<li><a class="reference internal" href="#preventing-usage-of-on-disk-token-cache" id="id14">3.4&nbsp;&nbsp;&nbsp;Preventing usage of on-disk token cache</a></li>
+<li><a class="reference internal" href="#controlling-the-location-of-the-on-disk-token-cache" id="id15">3.5&nbsp;&nbsp;&nbsp;Controlling the location of the on-disk token cache</a></li>
+<li><a class="reference internal" href="#multiple-processes-using-the-same-key" id="id16">3.6&nbsp;&nbsp;&nbsp;Multiple processes using the same key</a></li>
+<li><a class="reference internal" href="#example-using-django" id="id17">3.7&nbsp;&nbsp;&nbsp;Example using Django</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uploading-or-replacing-images" id="id18">4&nbsp;&nbsp;&nbsp;Uploading or replacing images</a><ul class="auto-toc">
+<li><a class="reference internal" href="#flickr-upload" id="id19">4.1&nbsp;&nbsp;&nbsp;flickr.upload(...)</a></li>
+<li><a class="reference internal" href="#flickr-replace" id="id20">4.2&nbsp;&nbsp;&nbsp;flickr.replace(...)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#unicode-and-utf-8" id="id21">5&nbsp;&nbsp;&nbsp;Unicode and UTF-8</a></li>
+<li><a class="reference internal" href="#caching-of-flickr-api-calls" id="id22">6&nbsp;&nbsp;&nbsp;Caching of Flickr API calls</a><ul class="auto-toc">
+<li><a class="reference internal" href="#using-the-django-caching-framework" id="id23">6.1&nbsp;&nbsp;&nbsp;Using the Django caching framework</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#utility-methods" id="id24">7&nbsp;&nbsp;&nbsp;Utility methods</a><ul class="auto-toc">
+<li><a class="reference internal" href="#walking-through-all-photos-in-a-set" id="id25">7.1&nbsp;&nbsp;&nbsp;Walking through all photos in a set</a></li>
+<li><a class="reference internal" href="#walking-through-a-search-result" id="id26">7.2&nbsp;&nbsp;&nbsp;Walking through a search result</a></li>
+<li><a class="reference internal" href="#influencing-the-number-of-calls-to-flickr" id="id27">7.3&nbsp;&nbsp;&nbsp;Influencing the number of calls to Flickr</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#short-flickr-urls" id="id28">8&nbsp;&nbsp;&nbsp;Short Flickr URLs</a></li>
+<li><a class="reference internal" href="#requirements-and-compatibility" id="id29">9&nbsp;&nbsp;&nbsp;Requirements and compatibility</a></li>
+<li><a class="reference internal" href="#links" id="id30">10&nbsp;&nbsp;&nbsp;Links</a></li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h1><a class="toc-backref" href="#id1">1&nbsp;&nbsp;&nbsp;Introduction</a></h1>
+<p><a class="reference external" href="http://www.flickr.com/">Flickr</a> is one of the most popular photo sharing websites. Their
+public API makes it very easy to write applications that use Flickr
+some way or another. The possibilities are limitless. This document
+describes how to use the Flickr API in your Python programs using the
+<a class="reference external" href="http://www.stuvel.eu/projects/flickrapi">Python Flickr API interface</a>.</p>
+<p>This documentation does not specify what each Flickr API function
+does, nor what it returns. The <a class="reference external" href="http://www.flickr.com/services/api/">Flickr API documentation</a> is the
+source for that information, and will most likely be more up-to-date
+than this document could be. Since the Python Flickr API uses dynamic
+methods and introspection, you can call new Flickr methods as soon as
+they become available.</p>
+<div class="section" id="concepts">
+<h2><a class="toc-backref" href="#id2">1.1&nbsp;&nbsp;&nbsp;Concepts</a></h2>
+<p>To keep things simple, we do not write &quot;he/she&quot; or &quot;(s)he&quot;. We know
+that men and women can all be fine programmers and end users. Some
+people will be addressed as male, others as female.</p>
+<p>To be able to easily talk about Flickr, its users, programmers and
+applications, here is an explanation of some concepts we use.</p>
+<dl class="docutils">
+<dt>you</dt>
+<dd>The reader of this document. We assume you are a programmer and
+that you are using this Python Flickr API to create an
+application. In this document we shall address you as male.</dd>
+<dt>application</dt>
+<dd>The Python application you are creating, that has to interface
+with Flickr.</dd>
+<dt>user</dt>
+<dd>The user of the application, and thus (either directly or
+indirectly via your application) a Flickr user. In this document
+we shall address the user as female.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="calling-api-functions">
+<h1><a class="toc-backref" href="#id3">2&nbsp;&nbsp;&nbsp;Calling API functions</a></h1>
+<p>You start by creating a FlickrAPI object with your API key. This key
+can be obtained at <a class="reference external" href="http://www.flickr.com/services/api/keys/apply/">Flickr Services</a>. Once you have that key, the
+cool stuff can begin. Calling a Flickr function is very easy. Here are
+some examples:</p>
+<pre class="literal-block">
+import flickrapi
+
+api_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+
+flickr = flickrapi.FlickrAPI(api_key)
+photos = flickr.photos_search(user_id='73509078&#64;N00', per_page='10')
+sets = flickr.photosets_getList(user_id='73509078&#64;N00')
+</pre>
+<p>There is a simple naming scheme here. If the flickr function is called
+<tt class="docutils literal"><span class="pre">flickr.photosets.getList</span></tt> just call <tt class="docutils literal"><span class="pre">photosets_getList</span></tt> on your
+<tt class="docutils literal"><span class="pre">flickr</span></tt> object. In other words: replace the dots with underscores.</p>
+<div class="section" id="parsing-the-return-value">
+<h2><a class="toc-backref" href="#id4">2.1&nbsp;&nbsp;&nbsp;Parsing the return value</a></h2>
+<p>Flickr sends back XML when you call a function. This XML is parsed and
+returned to you. There are two parsers available: ElementTree and
+XMLNode. ElementTree was introduced in version 1.1, and replaced
+XMLNode as the default parser as of version 1.2.</p>
+<p>In the following sections, we'll use a <tt class="docutils literal"><span class="pre">sets</span> <span class="pre">=</span>
+<span class="pre">flickr.photosets_getList(...)</span></tt> call and assume this was the response
+XML:</p>
+<pre class="literal-block">
+&lt;rsp stat='ok'&gt;
+    &lt;photosets cancreate=&quot;1&quot;&gt;
+        &lt;photoset id=&quot;5&quot; primary=&quot;2483&quot; secret=&quot;abcdef&quot;
+                server=&quot;8&quot; photos=&quot;4&quot;&gt;
+            &lt;title&gt;Test&lt;/title&gt;
+            &lt;description&gt;foo&lt;/description&gt;
+        &lt;/photoset&gt;
+        &lt;photoset id=&quot;4&quot; primary=&quot;1234&quot; secret=&quot;832659&quot;
+                server=&quot;3&quot; photos=&quot;12&quot;&gt;
+            &lt;title&gt;My Set&lt;/title&gt;
+            &lt;description&gt;bar&lt;/description&gt;
+        &lt;/photoset&gt;
+    &lt;/photosets&gt;
+&lt;/rsp&gt;
+</pre>
+</div>
+<div class="section" id="response-parser-elementtree">
+<h2><a class="toc-backref" href="#id5">2.2&nbsp;&nbsp;&nbsp;Response parser: ElementTree</a></h2>
+<p>The old XMLNode parser had some drawbacks. A better one is Python's
+standard <a class="reference external" href="http://docs.python.org/lib/module-xml.etree.ElementTree.html">ElementTree</a>. If you create the <tt class="docutils literal"><span class="pre">FlickrAPI</span></tt> instance like
+this, you'll use ElementTree:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key)
+</pre>
+<p>or explicitly:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key, format='etree')
+</pre>
+<p>The <a class="reference external" href="http://docs.python.org/lib/module-xml.etree.ElementTree.html">ElementTree documentation</a> is quite clear, but to make things
+even easier, here are some examples using the same call and response
+XML as in the XMLNode example:</p>
+<pre class="literal-block">
+sets = flickr.photosets_getList(user_id='73509078&#64;N00')
+
+sets.attrib['stat'] =&gt; 'ok'
+sets.find('photosets').attrib['cancreate'] =&gt; '1'
+
+set0 = sets.find('photosets').findall('photoset')[0]
+
++-------------------------------+-----------+
+| variable                      | value     |
++-------------------------------+-----------+
+| set0.attrib['id']             | u'5'      |
+| set0.attrib['primary']        | u'2483'   |
+| set0.attrib['secret']         | u'abcdef' |
+| set0.attrib['server']         | u'8'      |
+| set0.attrib['photos']         | u'4'      |
+| set0.title[0].text            | u'Test'   |
+| set0.description[0].text      | u'foo'    |
+| set0.find('title').text       | 'Test'    |
+| set0.find('description').text | 'foo'     |
++-------------------------------+-----------+
+
+... and similar for set1 ...
+</pre>
+<p>ElementTree is a more mature, better thought out XML parsing
+framework. It has several advantages over the old XMLNode parser:</p>
+<blockquote>
+<ol class="arabic simple">
+<li>As a standard XML representation, ElementTree will be easier to
+plug into existing software.</li>
+<li>Easier to iterate over elements. For example, to list all
+&quot;title&quot; elements, you only need to do
+<tt class="docutils literal"><span class="pre">sets.getiterator('title')</span></tt>.</li>
+<li>Developed by the Python team, which means it's subject to more
+rigorous testing and has a wider audience than the Python
+Flickr API module. This will result in a higher quality and
+less bugs.</li>
+</ol>
+</blockquote>
+</div>
+<div class="section" id="elementtree-in-python-2-4">
+<h2><a class="toc-backref" href="#id6">2.3&nbsp;&nbsp;&nbsp;ElementTree in Python 2.4</a></h2>
+<p>Python 2.5 comes shipped with ElementTree. To get it running on Python
+2.4 you'll have to install ElementTree yourself. The easiest way is to
+get setuptools and then just type:</p>
+<pre class="literal-block">
+easy_install elementtree
+easy_install flickrapi
+</pre>
+<p>That'll get you both ElementTree and the latest version of the Python
+Flickr API.</p>
+<p>Another method is to get the Python FlickrAPI source and run:</p>
+<pre class="literal-block">
+python setup.py install
+easy_install elementtree
+</pre>
+<p>As a last resort, you can <a class="reference external" href="http://effbot.org/downloads/#elementtree">download ElementTree</a> and install it
+manually.</p>
+</div>
+<div class="section" id="response-parser-xmlnode">
+<h2><a class="toc-backref" href="#id7">2.4&nbsp;&nbsp;&nbsp;Response parser: XMLNode</a></h2>
+<p>The XMLNode objects are quite simple. Attributes in the XML are
+converted to dictionary keys with unicode values. Subelements are
+stored in properties.</p>
+<p>We assume you did <tt class="docutils literal"><span class="pre">sets</span> <span class="pre">=</span> <span class="pre">flickr.photosets_getList(...)</span></tt>. The
+<tt class="docutils literal"><span class="pre">sets</span></tt> variable will be structured as such:</p>
+<pre class="literal-block">
+sets['stat'] = 'ok'
+sets.photosets[0]['cancreate'] = u'1'
+sets.photosets[0].photoset = &lt; a list of XMLNode objects &gt;
+
+set0 = sets.photosets[0].photoset[0]
+set1 = sets.photosets[0].photoset[1]
+
++--------------------------+-----------+
+| variable                 | value     |
++--------------------------+-----------+
+| set0['id']               | u'5'      |
+| set0['primary']          | u'2483'   |
+| set0['secret']           | u'abcdef' |
+| set0['server']           | u'8'      |
+| set0['photos']           | u'4'      |
+| set0.title[0].text       | u'Test'   |
+| set0.description[0].text | u'foo'    |
++--------------------------+-----------+
+| set1['id']               | u'4'      |
+| set1['primary']          | u'1234'   |
+| set1['secret']           | u'832659' |
+| set1['server']           | u'3'      |
+| set1['photos']           | u'12'     |
+| set1.title[0].text       | u'My Set' |
+| set1.description[0].text | u'bar'    |
++--------------------------+-----------+
+</pre>
+<p>Every <tt class="docutils literal"><span class="pre">XMLNode</span></tt> also has a <tt class="docutils literal"><span class="pre">name</span></tt> property. The content of this
+property is left as an exercise for the reader.</p>
+<p>As of version 1.2 of the Python Flickr API this XMLNode parser is no
+longer the default parser, in favour of the ElementTree parser.
+XMLNode is still supported, though.</p>
+</div>
+<div class="section" id="erroneous-calls">
+<h2><a class="toc-backref" href="#id8">2.5&nbsp;&nbsp;&nbsp;Erroneous calls</a></h2>
+<p>When something has gone wrong Flickr will return an error code and a
+description of the error. In this case, a <tt class="docutils literal"><span class="pre">FlickrError</span></tt> exception
+will be thrown.</p>
+<p>The old behaviour of the Python Flickr API was to simply return the
+error code in the XML not raising any exception. It was possible to
+pass <tt class="docutils literal"><span class="pre">fail_on_error=False</span></tt> to the <tt class="docutils literal"><span class="pre">FlickrAPI</span></tt> constructor to get
+this behaviour, but this was deprecated in version 1.1 and has been
+removed in version 1.3.</p>
+</div>
+<div class="section" id="unparsed-response-formats">
+<h2><a class="toc-backref" href="#id9">2.6&nbsp;&nbsp;&nbsp;Unparsed response formats</a></h2>
+<p>Flickr supports different response formats, such as JSON and XML-RPC.
+If you want, you can use such a different response format. Just add a
+<tt class="docutils literal"><span class="pre">format=&quot;json&quot;</span></tt> option to the Flickr call. The Python Flickr API
+won't parse that format for you, though, so you just get the raw
+response:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; f = flickrapi.FlickrAPI(api_key)
+&gt;&gt;&gt; f.test_echo(boo='baah', format='json')
+'jsonFlickrApi({&quot;format&quot;:{&quot;_content&quot;:&quot;json&quot;},
+  &quot;auth_token&quot;:{&quot;_content&quot;:&quot;xxxxx&quot;},
+  &quot;boo&quot;:{&quot;_content&quot;:&quot;baah&quot;},
+  &quot;api_sig&quot;:{&quot;_content&quot;:&quot;xxx&quot;},
+  &quot;api_key&quot;:{&quot;_content&quot;:&quot;xxx&quot;},
+  &quot;method&quot;:{&quot;_content&quot;:&quot;flickr.test.echo&quot;},
+  &quot;stat&quot;:&quot;ok&quot;})'
+</pre>
+<p>If you want all your calls in a certain format, you can also use the
+<tt class="docutils literal"><span class="pre">format</span></tt> constructor parameter:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; f = flickrapi.FlickrAPI(api_key, format='json')
+&gt;&gt;&gt; f.test_echo(boo='baah')
+'jsonFlickrApi({&quot;format&quot;:{&quot;_content&quot;:&quot;json&quot;},
+  &quot;auth_token&quot;:{&quot;_content&quot;:&quot;xxxxx&quot;},
+  &quot;boo&quot;:{&quot;_content&quot;:&quot;baah&quot;},
+  &quot;api_sig&quot;:{&quot;_content&quot;:&quot;xxx&quot;},
+  &quot;api_key&quot;:{&quot;_content&quot;:&quot;xxx&quot;},
+  &quot;method&quot;:{&quot;_content&quot;:&quot;flickr.test.echo&quot;},
+  &quot;stat&quot;:&quot;ok&quot;})'
+</pre>
+<p>If you use an unparsed format, FlickrAPI won't check for errors. Any
+format not described in the &quot;Response parser&quot; sections is considered
+to be unparsed.</p>
+</div>
+</div>
+<div class="section" id="authentication">
+<h1><a class="toc-backref" href="#id10">3&nbsp;&nbsp;&nbsp;Authentication</a></h1>
+<p>Her photos may be private. Access to her account is private for sure.
+A lot of Flickr API calls require the application to be authenticated.
+This means that the user has to tell Flickr that the application is
+allowed to do whatever it needs to do.</p>
+<p>The Flickr document <a class="reference external" href="http://www.flickr.com/services/api/misc.userauth.html">User Authentication</a> explains the authentication
+process; it's good to know what's in there before you go on.</p>
+<p>The document states &quot;The auth_token and api_sig parameters should then
+be passed along with each request&quot;. You do <em>not</em> have to do this - the
+Python Flickr API takes care of that.</p>
+<p>Here is a simple example of Flickr's two-phase authentication:</p>
+<pre class="literal-block">
+import flickrapi
+
+api_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+api_secret = 'YYYYYYYYYYYYYYYY'
+
+flickr = flickrapi.FlickrAPI(api_key, api_secret)
+
+(token, frob) = flickr.get_token_part_one(perms='write')
+if not token: raw_input(&quot;Press ENTER after you authorized this program&quot;)
+flickr.get_token_part_two((token, frob))
+</pre>
+<p>The <tt class="docutils literal"><span class="pre">api_key</span></tt> and <tt class="docutils literal"><span class="pre">api_secret</span></tt> can be obtained from
+<a class="reference external" href="http://www.flickr.com/services/api/keys/">http://www.flickr.com/services/api/keys/</a>.</p>
+<p>The call to <tt class="docutils literal"><span class="pre">flickr.get_token_part_one(...)</span></tt> does a lot of things.
+First, it checks the on-disk token cache. After all, the application
+may be authenticated already.</p>
+<p>If the application isn't authenticated, a browser opens the Flickr
+page, on which the user can grant the application the appropriate
+access. The application has to wait for the user to do this, hence the
+<tt class="docutils literal"><span class="pre">raw_input(&quot;Press</span> <span class="pre">ENTER</span> <span class="pre">after</span> <span class="pre">you</span> <span class="pre">authorized</span> <span class="pre">this</span> <span class="pre">program&quot;)</span></tt>. A GUI
+application can use a popup for this, or some other way for the user
+to indicate she has performed the authentication ritual.</p>
+<p>Once this step is done, we can continue to store the token in the
+cache and remember it for future API calls. This is what
+<tt class="docutils literal"><span class="pre">flickr.get_token_part_two(...)</span></tt> does.</p>
+<div class="section" id="authentication-callback">
+<h2><a class="toc-backref" href="#id11">3.1&nbsp;&nbsp;&nbsp;Authentication callback</a></h2>
+<p>By default a webbrowser is started to let the user perform the
+authentication. However, this may not be appropriate or even possible
+in your application. If you want to alter this functionality, use the
+<tt class="docutils literal"><span class="pre">auth_callback</span></tt> parameter when calling <tt class="docutils literal"><span class="pre">get_token_part_one(...)</span></tt>.
+The function will be passed the frob and the requested permission:</p>
+<pre class="literal-block">
+def auth(frob, perms):
+    print 'Please give us permission %s' % perms
+
+(token, frob) = flickr.get_token_part_one(perms='write', auth)
+</pre>
+<p>Of course this example isn't useful, but it shows how to use the
+callback. If you just want to wrap the browser startup with some code,
+call <tt class="docutils literal"><span class="pre">flickr.validate_frob(frob,</span> <span class="pre">perms)</span></tt> from your callback.</p>
+</div>
+<div class="section" id="authenticating-web-applications">
+<h2><a class="toc-backref" href="#id12">3.2&nbsp;&nbsp;&nbsp;Authenticating web applications</a></h2>
+<p>When working with web applications, things are a bit different. The
+user using the application (through a browser) is likely to be
+different from the user running the server-side software.</p>
+<p>We'll assume you're following Flickr's <a class="reference external" href="http://www.flickr.com/services/api/auth.howto.web.html">Web Applications How-To</a>, and
+just tell you how things are splified when working with the Python
+Flickr API.</p>
+<blockquote>
+<ol class="arabic simple" start="3">
+<li>Create a login link. Use <tt class="docutils literal"><span class="pre">flickr.web_login_url(perms)`</span></tt> for
+that.  It'll return the login link for you, given the
+permissions you passed in the <tt class="docutils literal"><span class="pre">perms</span></tt> parameter.</li>
+</ol>
+<ol class="arabic simple" start="5">
+<li>Don't bother understanding the signing process; the
+<tt class="docutils literal"><span class="pre">FlickrAPI</span></tt> module takes care of that for you. Once you
+received the frob from Flickr, use
+<tt class="docutils literal"><span class="pre">flickr.get_token(&quot;the_frob&quot;)</span></tt>. The FlickrAPI module will
+remember the token for you.</li>
+<li>You can safely skip this, and just use the FlickrAPI module as
+usual. Only read this if you want to understand how the
+FlickrAPI module signs method calls for you.</li>
+</ol>
+</blockquote>
+</div>
+<div class="section" id="token-handling-in-web-applications">
+<h2><a class="toc-backref" href="#id13">3.3&nbsp;&nbsp;&nbsp;Token handling in web applications</a></h2>
+<p>Web applications have two kinds of users: identified and anonymous
+users. If your users are identified, you can pass their name (or other
+means of identification) as the <tt class="docutils literal"><span class="pre">username</span></tt> parameter to the
+<tt class="docutils literal"><span class="pre">FlickrAPI</span></tt> constructor, and get a FlickrAPI instance that's bound
+to that user. It will keep track of the authentication token for that
+user, and there's nothing special you'll have to do.</p>
+<p>When working with anonymous users, you'll have to store the
+authentication token in a cookie. In step 5. above, use this:</p>
+<pre class="literal-block">
+token = flickr.get_token(&quot;the_frob&quot;)
+</pre>
+<p>Then use your web framework to store the token in a cookie. When
+reading a token from a cookie, pass it on to the FlickrAPI constructor
+like this:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key, api_secret, token=token)
+</pre>
+<p>It won't be stored in the on-disk token cache - which is a good thing,
+since</p>
+<blockquote>
+<ol class="upperalpha simple">
+<li>you don't know who the user is, so you wouldn't be able to
+retrieve the appropriate tokens for visiting users.</li>
+<li>the tokens are stored in cookies, so there is no need to store
+them in another place.</li>
+</ol>
+</blockquote>
+</div>
+<div class="section" id="preventing-usage-of-on-disk-token-cache">
+<h2><a class="toc-backref" href="#id14">3.4&nbsp;&nbsp;&nbsp;Preventing usage of on-disk token cache</a></h2>
+<p>Another way of preventing the storage of tokens is to pass
+<tt class="docutils literal"><span class="pre">store_token=False</span></tt> as the constructor parameter. Use this if you
+want to be absolutely sure that the FlickrAPI instance doesn't use any
+previously stored tokens, nor that it will store new tokens.</p>
+</div>
+<div class="section" id="controlling-the-location-of-the-on-disk-token-cache">
+<h2><a class="toc-backref" href="#id15">3.5&nbsp;&nbsp;&nbsp;Controlling the location of the on-disk token cache</a></h2>
+<p>By default the authentication tokens are stored in the directory
+<tt class="docutils literal"><span class="pre">~/.flickr</span></tt>. If you want to change this directory, you can do so
+by changing the <tt class="docutils literal"><span class="pre">flickr.token.path</span></tt> variable after you have created
+the <tt class="docutils literal"><span class="pre">FlickrAPI</span></tt> instance:</p>
+<pre class="literal-block">
+import flickrapi
+
+api_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+api_secret = 'YYYYYYYYYYYYYYYY'
+
+flickr = flickrapi.FlickrAPI(api_key, api_secret)
+flickr.token.path = '/tmp/flickrtokens'
+
+(token, frob) = flickr.get_token_part_one(perms='write')
+if not token: raw_input(&quot;Press ENTER after you authorized this program&quot;)
+flickr.get_token_part_two((token, frob))
+</pre>
+</div>
+<div class="section" id="multiple-processes-using-the-same-key">
+<h2><a class="toc-backref" href="#id16">3.6&nbsp;&nbsp;&nbsp;Multiple processes using the same key</a></h2>
+<p>By default the token is stored on the filesystem in
+<tt class="docutils literal"><span class="pre">somepath/&lt;authentication</span> <span class="pre">key&gt;/auth.token</span></tt>. When multiple
+processes use the same authentication key a race condition can occur
+where the authentication token is removed. To circumvent this, use the
+<tt class="docutils literal"><span class="pre">LockingTokenCache</span></tt> instead:</p>
+<pre class="literal-block">
+from flickrapi import FlickrAPI
+from flickrapi.tokencache import LockingTokenCache
+
+flickr = flickrapi.FlickrAPI(api_key, secret)
+
+flickr.token_cache = LockingTokenCache(api_key)
+# -- or --
+flickr.token_cache = LockingTokenCache(api_key, username)
+</pre>
+<p>This cache ensures that only one process at the time can use the token
+cache. It does not forsee in multi-threading.</p>
+<p>As the locking mechanism causes additional disk I/O and performs more
+checks, it is slower than the regular cache. Since not that many
+people use the same key in parallel on one machine (or a shared
+filesystem on which the token is stored) the default token cache does
+not use locking.</p>
+</div>
+<div class="section" id="example-using-django">
+<h2><a class="toc-backref" href="#id17">3.7&nbsp;&nbsp;&nbsp;Example using Django</a></h2>
+<p>Here is a simple example in <a class="reference external" href="http://www.djangoproject.com/">Django</a>:</p>
+<pre class="literal-block">
+import flickrapi
+from django.conf import settings
+from django.http import HttpResponseRedirect, HttpResponse
+
+import logging
+logging.basicConfig()
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+
+def require_flickr_auth(view):
+    '''View decorator, redirects users to Flickr when no valid
+    authentication token is available.
+    '''
+
+    def protected_view(request, *args, **kwargs):
+        if 'token' in request.session:
+            token = request.session['token']
+            log.info('Getting token from session: %s' % token)
+        else:
+            token = None
+            log.info('No token in session')
+
+       f = flickrapi.FlickrAPI(settings.FLICKR_API_KEY,
+               settings.FLICKR_API_SECRET, token=token,
+               store_token=False)
+
+        if token:
+            # We have a token, but it might not be valid
+            log.info('Verifying token')
+            try:
+                f.auth_checkToken()
+            except flickrapi.FlickrError:
+                token = None
+                del request.session['token']
+
+        if not token:
+            # No valid token, so redirect to Flickr
+            log.info('Redirecting user to Flickr to get frob')
+            url = f.web_login_url(perms='read')
+            return HttpResponseRedirect(url)
+
+        # If the token is valid, we can call the decorated view.
+        log.info('Token is valid')
+
+        return view(request, *args, **kwargs)
+
+    return protected_view
+
+def callback(request):
+    log.info('We got a callback from Flickr, store the token')
+
+   f = flickrapi.FlickrAPI(settings.FLICKR_API_KEY,
+           settings.FLICKR_API_SECRET, store_token=False)
+
+    frob = request.GET['frob']
+    token = f.get_token(frob)
+    request.session['token'] = token
+
+    return HttpResponseRedirect('/content')
+
+&#64;require_flickr_auth
+def content(request):
+    return HttpResponse('Welcome, oh authenticated user!')
+</pre>
+<p>Every view that calls an authenticated Flickr method should be
+decorated with <tt class="docutils literal"><span class="pre">&#64;require_flickr_auth</span></tt>. For more information on
+function decorators, see <a class="reference external" href="http://www.python.org/dev/peps/pep-0318/">PEP 318</a>.</p>
+<p>The <tt class="docutils literal"><span class="pre">callback</span></tt> view should be called when the user is sent to the
+callback URL as defined in your Flickr API key. The key and secret
+should be configured in your settings.py, in the properties
+<tt class="docutils literal"><span class="pre">FLICKR_API_KEY</span></tt> and <tt class="docutils literal"><span class="pre">FLICKR_API_SECRET</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="uploading-or-replacing-images">
+<h1><a class="toc-backref" href="#id18">4&nbsp;&nbsp;&nbsp;Uploading or replacing images</a></h1>
+<p>Transferring images requires special attention since they have to
+send a lot of data. Therefore they also are a bit different than
+advertised in the Flickr API documentation.</p>
+<div class="section" id="flickr-upload">
+<h2><a class="toc-backref" href="#id19">4.1&nbsp;&nbsp;&nbsp;flickr.upload(...)</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">flickr.upload(...)</span></tt> method has the following parameters:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">filename</span></tt></dt>
+<dd>The filename of the image. The image data is read from this file.</dd>
+<dt><tt class="docutils literal"><span class="pre">title</span></tt></dt>
+<dd>The title of the photo</dd>
+<dt><tt class="docutils literal"><span class="pre">description</span></tt></dt>
+<dd>The description of the photo</dd>
+<dt><tt class="docutils literal"><span class="pre">tags</span></tt></dt>
+<dd><p class="first">Space-delimited list of tags. Tags that contain spaces need to be
+quoted. For example:</p>
+<pre class="literal-block">
+tags='''Amsterdam &quot;central station&quot;'''
+</pre>
+<p class="last">Those are two tags, &quot;Amsterdam&quot; and &quot;central station&quot;.</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">is_public</span></tt></dt>
+<dd>&quot;1&quot; if the photo is public, &quot;0&quot; if it is private. The default is
+public.</dd>
+<dt><tt class="docutils literal"><span class="pre">is_family</span></tt></dt>
+<dd>&quot;1&quot; if the private photo is visible for family, &quot;0&quot; if not. The
+default is not.</dd>
+<dt><tt class="docutils literal"><span class="pre">is_friend</span></tt></dt>
+<dd>&quot;1&quot; if the private photo is visible for friends, &quot;0&quot; if not. The
+default is not.</dd>
+<dt><tt class="docutils literal"><span class="pre">callback</span></tt></dt>
+<dd><p class="first">This should be a method that receives two parameters, <tt class="docutils literal"><span class="pre">progress</span></tt>
+and <tt class="docutils literal"><span class="pre">done</span></tt>. The callback method will be called every once in a
+while during uploading. Example:</p>
+<pre class="last literal-block">
+def func(progress, done):
+    if done:
+        print &quot;Done uploading&quot;
+    else:
+        print &quot;At %s%%&quot; % progress
+
+flickr.upload(filename='test.jpg', callback=func)
+</pre>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">format</span></tt></dt>
+<dd>The response format. This <em>must</em> be either <tt class="docutils literal"><span class="pre">rest</span></tt> or one of the
+parsed formats <tt class="docutils literal"><span class="pre">etree</span></tt> / <tt class="docutils literal"><span class="pre">xmlnode</span></tt>.</dd>
+</dl>
+</div>
+<div class="section" id="flickr-replace">
+<h2><a class="toc-backref" href="#id20">4.2&nbsp;&nbsp;&nbsp;flickr.replace(...)</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">flickr.replace(...)</span></tt> method has the following parameters:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">filename</span></tt></dt>
+<dd>The filename of the image.</dd>
+<dt><tt class="docutils literal"><span class="pre">photo_id</span></tt></dt>
+<dd>The identifier of the photo that is to be replaced. Do not use
+this when uploading a new photo.</dd>
+<dt><tt class="docutils literal"><span class="pre">format</span></tt></dt>
+<dd>The response format. This <em>must</em> be either <tt class="docutils literal"><span class="pre">rest</span></tt> or one of the
+parsed formats <tt class="docutils literal"><span class="pre">etree</span></tt> / <tt class="docutils literal"><span class="pre">xmlnode</span></tt>.</dd>
+</dl>
+<p>Only the image itself is replaced, not the other data (title, tags,
+comments, etc.).</p>
+</div>
+</div>
+<div class="section" id="unicode-and-utf-8">
+<h1><a class="toc-backref" href="#id21">5&nbsp;&nbsp;&nbsp;Unicode and UTF-8</a></h1>
+<p>Flickr expects every text to be encoded in UTF-8. The Python Flickr
+API can help you in a limited way. If you pass a <tt class="docutils literal"><span class="pre">unicode</span></tt> string,
+it will automatically be encoded to UTF-8 before it's sent to Flickr.
+This is the preferred way of working, and is also forward-compatible
+with the upcoming Python 3.</p>
+<p>If you do not use <tt class="docutils literal"><span class="pre">unicode</span></tt> strings, you're on your own, and you're
+expected to perform the UTF-8 encoding yourself.</p>
+<p>Here is an example:</p>
+<pre class="literal-block">
+flickr.photos_setMeta(photo_id='12345',
+                      title=u'Money',
+                      description=u'Around \u20ac30,-')
+</pre>
+<p>This sets the photo's title to &quot;Money&quot; and the description to &quot;Around
+€30,-&quot;.</p>
+</div>
+<div class="section" id="caching-of-flickr-api-calls">
+<h1><a class="toc-backref" href="#id22">6&nbsp;&nbsp;&nbsp;Caching of Flickr API calls</a></h1>
+<p>There are situations where you call the same Flickr API methods over
+and over again. An example is a web page that shows your latest ten
+sets. In those cases caching can significantly improve performance.</p>
+<p>The FlickrAPI module comes with its own in-memory caching framework.
+By default it caches at most 200 entries, which time out after 5
+minutes. These defaults are probably fine for average use. To use the
+cache, just pass <tt class="docutils literal"><span class="pre">cache=True</span></tt> to the constructor:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key, cache=True)
+</pre>
+<p>To tweak the cache, instantiate your own instance and pass it some
+constructor arguments:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key, cache=True)
+flickr.cache = flickrapi.SimpleCache(timeout=300, max_entries=200)
+</pre>
+<p><tt class="docutils literal"><span class="pre">timeout</span></tt> is in seconds, <tt class="docutils literal"><span class="pre">max_entries</span></tt> in number of cached
+entries.</p>
+<div class="section" id="using-the-django-caching-framework">
+<h2><a class="toc-backref" href="#id23">6.1&nbsp;&nbsp;&nbsp;Using the Django caching framework</a></h2>
+<p>The caching framework was designed to have the same interface as the
+<a class="reference external" href="http://www.djangoproject.com/documentation/cache/#the-low-level-cache-api">Django low-level cache API</a> - thanks to those guys for designing a
+simple and effective cache. The result is that you can simply plug the
+Django caching framework into FlickrAPI, like this:</p>
+<pre class="literal-block">
+from django.core.cache import cache
+flickr = flickrapi.FlickrAPI(api_key, cache=True)
+flickr.cache = cache
+</pre>
+<p>That's all you need to enable a wealth of caching options, from
+database-backed cache to multi-node in-memory cache farms.</p>
+</div>
+</div>
+<div class="section" id="utility-methods">
+<h1><a class="toc-backref" href="#id24">7&nbsp;&nbsp;&nbsp;Utility methods</a></h1>
+<p>There are a couple of useful methods for handling photos.</p>
+<p><em>All utility methods require ElementTree to be available, so either
+use Python 2.5 or newer, or install it as described above.</em></p>
+<div class="section" id="walking-through-all-photos-in-a-set">
+<h2><a class="toc-backref" href="#id25">7.1&nbsp;&nbsp;&nbsp;Walking through all photos in a set</a></h2>
+<p>It may be useful to be able to easily perform an operation on every
+photo in a set. This is what the <tt class="docutils literal"><span class="pre">walk_set</span></tt> function does. It
+accepts a photoset ID and returns a generator:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key)
+for photo in flickr.walk_set('2b640a3efc262f03567ee93cfd544e14'):
+    print photo.get('title')
+</pre>
+<p>The function uses the Flickr API call <a class="reference external" href="http://www.flickr.com/services/api/flickr.photosets.getPhotos.html">flickr.photosets.getPhotos</a> and
+accepts the same parameters. The resulting &quot;photo&quot; objects are
+ElementTree objects for the <tt class="docutils literal"><span class="pre">&lt;photo</span> <span class="pre">.../&gt;</span></tt> XML elements.</p>
+</div>
+<div class="section" id="walking-through-a-search-result">
+<h2><a class="toc-backref" href="#id26">7.2&nbsp;&nbsp;&nbsp;Walking through a search result</a></h2>
+<p>Walking through a search result is done in much the same way as
+walking through all photos in a set:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key)
+for photo in flickr.walk(tag_mode='all',
+        tags='sybren,365,threesixtyfive',
+        min_taken_date='2008-08-20',
+        max_taken_date='2008-08-30'):
+    print photo.get('title')
+</pre>
+<p>The function uses the Flickr API call <a class="reference external" href="http://www.flickr.com/services/api/flickr.photos.search.html">flickr.photos.search</a> and
+accepts the same parameters. The resulting &quot;photo&quot; objects are
+ElementTree objects for the <tt class="docutils literal"><span class="pre">&lt;photo</span> <span class="pre">.../&gt;</span></tt> XML elements.</p>
+</div>
+<div class="section" id="influencing-the-number-of-calls-to-flickr">
+<h2><a class="toc-backref" href="#id27">7.3&nbsp;&nbsp;&nbsp;Influencing the number of calls to Flickr</a></h2>
+<p>The walking functions described above only call Flickr when they have
+to. When they do, they fetch <tt class="docutils literal"><span class="pre">per_page</span></tt> (default 50) photos
+simultaneously. The <tt class="docutils literal"><span class="pre">per_page</span></tt> parameter can be used to tweak the
+number of calls. The following will perform two calls two Flickr:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key)
+set = flickr.walk_set('&lt;set id&gt;', per_page=15)
+for photo in set[:25]:
+    print photo.get('title')
+</pre>
+<p>The first call will get photos 0-14, the next call will get 15-29,
+even though only the first 25 photo titles will be shown.</p>
+<p>Another example, if you only want to show the titles of photos 5-20:</p>
+<pre class="literal-block">
+flickr = flickrapi.FlickrAPI(api_key)
+set = flickr.walk_set('&lt;set id&gt;' per_page=20)
+for photo in set[5:21]:
+    print photo.get('title')
+</pre>
+<p>The photos will always be fetched from the first page onwards. In the
+above example, the first twenty photos will all be fetched, even
+though the title of the first five will be skipped.</p>
+</div>
+</div>
+<div class="section" id="short-flickr-urls">
+<h1><a class="toc-backref" href="#id28">8&nbsp;&nbsp;&nbsp;Short Flickr URLs</a></h1>
+<p>Flickr supports linking to a photo page using a short url such as
+<a class="reference external" href="http://flic.kr/p/6BTTT6">http://flic.kr/p/6BTTT6</a>. The <tt class="docutils literal"><span class="pre">flickrapi.shorturl</span></tt> module contains
+functionality for working with those short URLs.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">flickrapi.shorturl.encode(photo</span> <span class="pre">ID)</span></tt>:</dt>
+<dd>Returns the short ID for this photo ID</dd>
+<dt><tt class="docutils literal"><span class="pre">flickrapi.shorturl.encode(short</span> <span class="pre">ID)</span></tt>:</dt>
+<dd>Returns the photo ID for this short ID</dd>
+<dt><tt class="docutils literal"><span class="pre">flickrapi.shorturl.url(photo</span> <span class="pre">ID)</span></tt>:</dt>
+<dd>Returns the short URL for the given photo ID.</dd>
+</dl>
+<p>The photo ID, the short ID and the short URL are all unicode strings.</p>
+</div>
+<div class="section" id="requirements-and-compatibility">
+<h1><a class="toc-backref" href="#id29">9&nbsp;&nbsp;&nbsp;Requirements and compatibility</a></h1>
+<p>The Python Flickr API only uses built-in Python modules. It is
+compatible with Python 2.4 and newer.</p>
+<p>Usage of the &quot;etree&quot; format requires Python 2.5 or newer.</p>
+<p>Rendering the documentation requires <a class="reference external" href="http://docutils.sourceforge.net/">Docutils</a>.</p>
+</div>
+<div class="section" id="links">
+<h1><a class="toc-backref" href="#id30">10&nbsp;&nbsp;&nbsp;Links</a></h1>
+<ul class="simple">
+<li><a class="reference external" href="http://www.stuvel.eu/projects/flickrapi">Python Flickr API interface</a></li>
+<li><a class="reference external" href="http://www.flickr.com/">Flickr</a></li>
+<li><a class="reference external" href="http://www.flickr.com/services/api/">Flickr API documentation</a></li>
+</ul>
+</div>
+</div>
+</body>
+</html>
